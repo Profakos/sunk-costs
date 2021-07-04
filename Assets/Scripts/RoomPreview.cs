@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class RoomPreview : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+	public GameObject roomToBuild;
 
-    // Update is called once per frame
-    void Update()
-    {
+	public void BuildRoom()
+	{
+		Instantiate(roomToBuild, transform.position, transform.rotation);
 	}
 
 	void LateUpdate()
@@ -33,4 +29,16 @@ public class RoomPreview : MonoBehaviour
 
 		transform.position = new Vector3(x, y, 0);
 	}
+
+	// Start is called before the first frame update
+	void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+	}
+
 }

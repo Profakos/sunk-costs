@@ -5,11 +5,11 @@ using UnityEngine;
 public class HotelManager : MonoBehaviour
 {
 
-	public GameObject preview;
+	public RoomPreview preview;
 
 	void Awake()
 	{
-		preview = GameObject.Find("RoomPreview").gameObject;
+		preview = GameObject.Find("RoomPreview").gameObject.GetComponent<RoomPreview>();
 	}
 
     // Start is called before the first frame update
@@ -21,6 +21,7 @@ public class HotelManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-    }
+		if (Input.GetMouseButtonDown(0))
+			preview.BuildRoom();
+	}
 }
