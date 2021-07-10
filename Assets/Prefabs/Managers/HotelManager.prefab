@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7722006129814459298}
   m_Layer: 0
   m_Name: HotelManager
-  m_TagString: Untagged
+  m_TagString: Manager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -44,3 +44,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   preview: {fileID: 0}
+  selectedRoomIndex: 0
+  roomTypes:
+  - {fileID: 4778660199440494886, guid: 3954a3c2abcd0364db18fd7515202936, type: 3}
+  - {fileID: 595596928681509086, guid: 35ee297951c274548b46caafcc276610, type: 3}
+  - {fileID: 5735215796976646715, guid: 8bea7f180f6143f4996e11848fb1075e, type: 3}
+  - {fileID: 7620587257399987059, guid: fe97424197b57c048909821c85f10475, type: 3}
+  - {fileID: 2957712916566447360, guid: 47a16eee8c34e7b418058b14d3d48604, type: 3}

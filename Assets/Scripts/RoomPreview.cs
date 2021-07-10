@@ -4,12 +4,8 @@ using UnityEngine;
 
 public class RoomPreview : MonoBehaviour
 {
-	public GameObject roomToBuild;
+	public SpriteRenderer spriteRenderer;
 
-	public void BuildRoom()
-	{
-		Instantiate(roomToBuild, transform.position, transform.rotation);
-	}
 
 	void LateUpdate()
 	{
@@ -30,6 +26,11 @@ public class RoomPreview : MonoBehaviour
 		transform.position = new Vector3(x, y, 0);
 	}
 
+	void Awake()
+	{
+		spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+	}
+
 	// Start is called before the first frame update
 	void Start()
     {
@@ -39,6 +40,14 @@ public class RoomPreview : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+	}
+
+	//updates the preview's sprite
+	public void UpdateSprite(SpriteRenderer newSpriteRenderer)
+	{
+		if (newSpriteRenderer == null) return;
+
+		spriteRenderer.sprite = newSpriteRenderer.sprite;
 	}
 
 }

@@ -3,7 +3,10 @@ guid: d1dabe9dc6cc7be468d81a1e70e6bf7f
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - preview: {instanceID: 0}
+  - roomToBuild: {fileID: 4778660199440494886, guid: 3954a3c2abcd0364db18fd7515202936,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
