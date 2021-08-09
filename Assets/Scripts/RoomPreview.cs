@@ -13,8 +13,8 @@ public class RoomPreview : MonoBehaviour
 		Vector3 mousePosition = Input.mousePosition;
 		mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
 		  
-		float x = Mathf.Max(Mathf.Min(Mathf.RoundToInt(mousePosition.x * hotelSizeData.scale), hotelSizeData.maxX), hotelSizeData.minX);
-		float y = Mathf.Max(Mathf.Min(Mathf.RoundToInt(mousePosition.y * hotelSizeData.scale), hotelSizeData.maxY), hotelSizeData.minY);
+		float x = Mathf.Max(Mathf.Min(Mathf.RoundToInt(mousePosition.x * hotelSizeData.Scale), hotelSizeData.MaxX), hotelSizeData.MinX);
+		float y = Mathf.Max(Mathf.Min(Mathf.RoundToInt(mousePosition.y * hotelSizeData.Scale), Mathf.Min(hotelSizeData.MinY + hotelSizeData.CurrentHotelHeight - 1 , hotelSizeData.MaxY)), hotelSizeData.MinY);
 
 
 		transform.position = new Vector3(x, y, 0);
