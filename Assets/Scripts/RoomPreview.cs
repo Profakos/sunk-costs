@@ -5,22 +5,16 @@ using UnityEngine;
 public class RoomPreview : MonoBehaviour
 {
 	public SpriteRenderer spriteRenderer;
+	public HotelSizeData hotelSizeData;
 
 
 	void LateUpdate()
 	{
 		Vector3 mousePosition = Input.mousePosition;
 		mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
-
-		float scale = 1;
-
-		float minX = -8;
-		float maxX = 8;
-		float minY = -4;
-		float maxY = 4;
-
-		float x = Mathf.Max(Mathf.Min(Mathf.RoundToInt(mousePosition.x * scale), maxX), minX);
-		float y = Mathf.Max(Mathf.Min(Mathf.RoundToInt(mousePosition.y * scale), maxY), minY);
+		  
+		float x = Mathf.Max(Mathf.Min(Mathf.RoundToInt(mousePosition.x * hotelSizeData.scale), hotelSizeData.maxX), hotelSizeData.minX);
+		float y = Mathf.Max(Mathf.Min(Mathf.RoundToInt(mousePosition.y * hotelSizeData.scale), hotelSizeData.maxY), hotelSizeData.minY);
 
 
 		transform.position = new Vector3(x, y, 0);

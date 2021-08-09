@@ -96,5 +96,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c8768b2913e9ac4d8e63eacba831445, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomToBuild: {fileID: 4778660199440494886, guid: 3954a3c2abcd0364db18fd7515202936,
-    type: 3}
+  spriteRenderer: {fileID: 0}
+  hotelSizeData: {fileID: 11400000, guid: 3ca961cb7df0c334e839b637abdbb4ec, type: 2}

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class HotelManager : MonoBehaviour
 {
+	public HotelSizeData hotelSizeData;
 
 	public RoomPreview preview;
 	public int selectedRoomIndex = 0;
