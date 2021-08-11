@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class HotelManager : MonoBehaviour
 {
@@ -26,41 +27,44 @@ public class HotelManager : MonoBehaviour
     void Update()
     {
 		if (Input.GetMouseButtonDown(0))
-			BuildRoom();
+		{
+			if(!EventSystem.current.IsPointerOverGameObject())
+			{
+				BuildRoom();
+			}
+		}
 
 		if (Input.GetKeyDown(KeyCode.LeftShift))
 		{
-			if(hotelSizeData != null)
-			{
-				hotelSizeData.CurrentHotelHeight += 1;
-			}
+			NewFloor();
 		}
 
 		if (Input.GetKeyDown(KeyCode.Alpha1))
 		{
-			updatePreview(0);
+			UpdatePreview(0);
 		}
 
 		if (Input.GetKeyDown(KeyCode.Alpha2))
 		{
-			updatePreview(1);
+			UpdatePreview(1);
 		}
 
 		if (Input.GetKeyDown(KeyCode.Alpha3))
 		{
-			updatePreview(2);
+			UpdatePreview(2);
 		}
 
 		if (Input.GetKeyDown(KeyCode.Alpha4))
 		{
-			updatePreview(3);
+			UpdatePreview(3);
 		}
 
 		if (Input.GetKeyDown(KeyCode.Alpha5))
 		{
-			updatePreview(4);
+			UpdatePreview(4);
 		}
 	}
+
 
 	public void BuildRoom()
 	{
@@ -72,7 +76,16 @@ public class HotelManager : MonoBehaviour
 			Instantiate(roomToBuild, preview.transform.position, preview.transform.rotation);
 	}
 
-	public void updatePreview(int index)
+	public void NewFloor()
+	{
+		if (hotelSizeData != null)
+		{
+			hotelSizeData.CurrentHotelHeight += 1;
+		}
+	}
+
+
+	public void UpdatePreview(int index)
 	{
 		selectedRoomIndex = index;
 		
