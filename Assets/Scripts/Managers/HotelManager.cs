@@ -10,6 +10,7 @@ public class HotelManager : MonoBehaviour
 	public RoomPreview preview;
 	public int selectedRoomIndex = 0;
 	public List<GameObject> roomTypes;
+	public GameObject backRoomPrefab;
 
 	void Awake()
 	{
@@ -80,7 +81,19 @@ public class HotelManager : MonoBehaviour
 	{
 		if (hotelSizeData != null)
 		{
+
+			if (hotelSizeData.MinY + hotelSizeData.CurrentHotelHeight + 1 > hotelSizeData.MaxY) return;
+
 			hotelSizeData.CurrentHotelHeight += 1;
+			
+			if (backRoomPrefab != null)
+			{
+				Vector3 newBackRoomPos = new Vector3(backRoomPrefab.transform.position.x, hotelSizeData.MinY + hotelSizeData.CurrentHotelHeight - 1, 0);
+
+				GameObject newBackRoom = Instantiate(backRoomPrefab, newBackRoomPos, backRoomPrefab.transform.rotation);
+				 
+			}
+
 		}
 	}
 
