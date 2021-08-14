@@ -12,6 +12,9 @@ public class HotelManager : MonoBehaviour
 	public List<GameObject> roomTypes;
 	public GameObject backRoomPrefab;
 
+	public List<HotelRoom> hotelRooms = new List<HotelRoom>();
+	public HashSet<Vector2> usedCoordinates = new HashSet<Vector2>();
+
 	public Vector3 worldToHotelOffset;
 
 	void Awake()
@@ -87,6 +90,8 @@ public class HotelManager : MonoBehaviour
 
 		Vector3 hotelLocation = preview.transform.position - worldToHotelOffset;
 
+		List<Vector3> coordinatesToAdd = new List<Vector3>();
+
 		foreach (Vector3 offset in roomShapeData.OffsetFromRoomCenter)  {
 
 			Vector3 coordinateToCheck = offset + hotelLocation;
@@ -112,10 +117,31 @@ public class HotelManager : MonoBehaviour
 				Debug.Log("Too high");
 				return;
 			}
+
+			if(usedCoordinates.Contains(coordinateToCheck))
+			{ 
+				Debug.Log("Location blocked");
+				return;
+			}
+
+			coordinatesToAdd.Add(coordinateToCheck);
 		}
 
-		if (roomToBuild != null)
-			Instantiate(roomToBuild, preview.transform.position, preview.transform.rotation);
+		if (!roomToBuild) return;
+
+		GameObject newRoomObject = Instantiate(roomToBuild, preview.transform.position, preview.transform.rotation);
+		HotelRoom newRoom = roomToBuild.GetComponent<HotelRoom>();
+
+		if (!newRoom)
+			return;
+
+		hotelRooms.Add(newRoom);
+
+		foreach(var coordinate in coordinatesToAdd)
+		{
+			usedCoordinates.Add(coordinate);
+		}
+
 	}
 
 	public void NewFloor()
