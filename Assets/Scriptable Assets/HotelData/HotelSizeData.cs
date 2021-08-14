@@ -16,6 +16,7 @@ public class HotelSizeData : ScriptableObject
 	[SerializeField]
 	private float maxY;
 
+	private float initialHotelHeight = 0;
 	[SerializeField]
 	private float currentHotelHeight;
 
@@ -26,4 +27,5 @@ public class HotelSizeData : ScriptableObject
 	public float MinY { get => minY; set => minY = value; }
 	public float MaxY { get => maxY; set => maxY = value; }
 	public float CurrentHotelHeight1 { get => currentHotelHeight; set => currentHotelHeight = value; }
+	public float InitialHotelHeight { get => initialHotelHeight; }
 }

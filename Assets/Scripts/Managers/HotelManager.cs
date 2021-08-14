@@ -15,7 +15,8 @@ public class HotelManager : MonoBehaviour
 	void Awake()
 	{
 		preview = GameObject.Find("RoomPreview").gameObject.GetComponent<RoomPreview>();
-		hotelSizeData.CurrentHotelHeight = 1;
+		hotelSizeData.CurrentHotelHeight = hotelSizeData.InitialHotelHeight;
+		NewFloor();
 	}
 
     // Start is called before the first frame update
