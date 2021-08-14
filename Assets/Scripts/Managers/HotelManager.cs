@@ -12,8 +12,12 @@ public class HotelManager : MonoBehaviour
 	public List<GameObject> roomTypes;
 	public GameObject backRoomPrefab;
 
+	public Vector3 worldToHotelOffset;
+
 	void Awake()
 	{
+		worldToHotelOffset = new Vector3(hotelSizeData.MinX, hotelSizeData.MinY, 0);
+
 		preview = GameObject.Find("RoomPreview").gameObject.GetComponent<RoomPreview>();
 		hotelSizeData.CurrentHotelHeight = hotelSizeData.InitialHotelHeight;
 		NewFloor();
@@ -74,6 +78,42 @@ public class HotelManager : MonoBehaviour
 
 		var roomToBuild = roomTypes[selectedRoomIndex];
 
+		HotelRoom hotelRoom = roomToBuild.GetComponent<HotelRoom>();
+
+		if (!hotelRoom)
+			return;
+
+		RoomShapeData roomShapeData = hotelRoom.roomShape;
+
+		Vector3 hotelLocation = preview.transform.position - worldToHotelOffset;
+
+		foreach (Vector3 offset in roomShapeData.OffsetFromRoomCenter)  {
+
+			Vector3 coordinateToCheck = offset + hotelLocation;
+			if (coordinateToCheck.x < 0) {
+				Debug.Log("Too left");
+				return;
+			}
+
+			if (coordinateToCheck.y < 0)
+			{
+				Debug.Log("Too low");
+				return;
+			}
+
+			if (coordinateToCheck.x > hotelSizeData.MaxX - worldToHotelOffset.x)
+			{
+				Debug.Log("Too left");
+				return;
+			}
+
+			if (coordinateToCheck.y >= hotelSizeData.CurrentHotelHeight)
+			{
+				Debug.Log("Too high");
+				return;
+			}
+		}
+
 		if (roomToBuild != null)
 			Instantiate(roomToBuild, preview.transform.position, preview.transform.rotation);
 	}
@@ -97,7 +137,6 @@ public class HotelManager : MonoBehaviour
 
 		}
 	}
-
 
 	public void UpdatePreview(int index)
 	{
