@@ -12,6 +12,7 @@ public class HotelManager : MonoBehaviour
 	public List<GameObject> roomTypes;
 	public GameObject backRoomPrefab;
 
+	public List<GameObject> hotelBackRooms = new List<GameObject>();
 	public List<HotelRoom> hotelRooms = new List<HotelRoom>();
 	public HashSet<Vector2> usedCoordinates = new HashSet<Vector2>();
 
@@ -158,7 +159,8 @@ public class HotelManager : MonoBehaviour
 				Vector3 newBackRoomPos = new Vector3(backRoomPrefab.transform.position.x, hotelSizeData.MinY + hotelSizeData.CurrentHotelHeight - 1, 0);
 
 				GameObject newBackRoom = Instantiate(backRoomPrefab, newBackRoomPos, backRoomPrefab.transform.rotation);
-				 
+
+				hotelBackRooms.Add(newBackRoom);
 			}
 
 		}
