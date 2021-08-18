@@ -4,8 +4,9 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
+  - hotelSizeData: {instanceID: 0}
   - preview: {instanceID: 0}
-  - roomToBuild: {fileID: 4778660199440494886, guid: 3954a3c2abcd0364db18fd7515202936,
+  - backRoomPrefab: {fileID: 3981547880261531114, guid: b4417a7bc64a8014f9eb3d971a8419e9,
       type: 3}
   executionOrder: 0
   icon: {instanceID: 0}

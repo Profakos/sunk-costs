@@ -5,7 +5,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "RoomShapeData", menuName = "ScriptableObjects/RoomShapeData", order = 1)]
 public class RoomShapeData : ScriptableObject
 {
-	public string shapeName;
-	 
-	public Vector2[] offsetFromRoomCenter;
+	[SerializeField]
+	private string shapeName;
+
+	[SerializeField]
+	private Vector2[] offsetFromRoomCenter;
+
+	public string ShapeName { get => shapeName; set => shapeName = value; }
+	public Vector2[] OffsetFromRoomCenter { get => offsetFromRoomCenter; set => offsetFromRoomCenter = value; }
 }

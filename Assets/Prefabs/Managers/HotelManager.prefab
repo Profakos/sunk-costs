@@ -43,6 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1dabe9dc6cc7be468d81a1e70e6bf7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hotelSizeData: {fileID: 11400000, guid: 3ca961cb7df0c334e839b637abdbb4ec, type: 2}
   preview: {fileID: 0}
   selectedRoomIndex: 0
   roomTypes:
