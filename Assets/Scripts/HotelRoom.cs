@@ -17,4 +17,9 @@ public class HotelRoom : MonoBehaviour
     {
         
     }
+
+	public void Sink()
+	{
+		transform.Translate(0, -1f, 0);
+	}
 }

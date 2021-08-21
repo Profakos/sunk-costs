@@ -46,37 +46,12 @@ public class HotelManager : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.LeftShift))
 		{
-			NewFloor();
+			SinkHotel();
 		}
-
-		if (Input.GetKeyDown(KeyCode.Alpha1))
-		{
-			UpdatePreview(0);
-		}
-
-		if (Input.GetKeyDown(KeyCode.Alpha2))
-		{
-			UpdatePreview(1);
-		}
-
-		if (Input.GetKeyDown(KeyCode.Alpha3))
-		{
-			UpdatePreview(2);
-		}
-
-		if (Input.GetKeyDown(KeyCode.Alpha4))
-		{
-			UpdatePreview(3);
-		}
-
-		if (Input.GetKeyDown(KeyCode.Alpha5))
-		{
-			UpdatePreview(4);
-		}
+		
 	}
 
-
-	public void BuildRoom()
+	private void BuildRoom()
 	{
 		if (roomTypes.Count < selectedRoomIndex) return;
 
@@ -131,7 +106,7 @@ public class HotelManager : MonoBehaviour
 		if (!roomToBuild) return;
 
 		GameObject newRoomObject = Instantiate(roomToBuild, preview.transform.position, preview.transform.rotation);
-		HotelRoom newRoom = roomToBuild.GetComponent<HotelRoom>();
+		HotelRoom newRoom = newRoomObject.GetComponent<HotelRoom>();
 
 		if (!newRoom)
 			return;
@@ -145,7 +120,7 @@ public class HotelManager : MonoBehaviour
 
 	}
 
-	public void NewFloor()
+	private void NewFloor()
 	{
 		if (hotelSizeData != null)
 		{
@@ -166,7 +141,25 @@ public class HotelManager : MonoBehaviour
 		}
 	}
 
-	public void UpdatePreview(int index)
+	private void SinkHotel()
+	{
+
+		foreach(GameObject backroom in hotelBackRooms) {
+
+			backroom.transform.Translate(0, -1f, 0);
+		}
+
+		foreach (HotelRoom hotelRoom in hotelRooms)
+		{
+
+			hotelRoom.Sink();
+		}
+
+		hotelSizeData.CurrentHotelHeight -= 1;
+
+	}
+
+	private void UpdatePreview(int index)
 	{
 		selectedRoomIndex = index;
 		
