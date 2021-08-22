@@ -14,7 +14,7 @@ public class HotelManager : MonoBehaviour
 
 	public List<GameObject> hotelBackRooms = new List<GameObject>();
 	public List<HotelRoom> hotelRooms = new List<HotelRoom>();
-	public HashSet<Vector2> usedCoordinates = new HashSet<Vector2>();
+	public List<Vector2> usedCoordinates = new List<Vector2>();
 
 	public Vector3 worldToHotelOffset;
 
@@ -144,19 +144,43 @@ public class HotelManager : MonoBehaviour
 	private void SinkHotel()
 	{
 
-		foreach(GameObject backroom in hotelBackRooms) {
-
-			backroom.transform.Translate(0, -1f, 0);
-		}
-
-		foreach (HotelRoom hotelRoom in hotelRooms)
+		for(int i = hotelBackRooms.Count - 1; i >=  0; i--)
 		{
-
+			var hotelBackroom = hotelBackRooms[i];
+			hotelBackroom.transform.Translate(0, -1f, 0);
+			if (hotelBackroom.transform.position.y < hotelSizeData.MinY)
+			{
+				hotelBackRooms.Remove(hotelBackroom);
+				Destroy(hotelBackroom);
+			}
+		}
+		 
+		for (int i = hotelRooms.Count - 1; i >= 0; i--)
+		{
+			var hotelRoom = hotelRooms[i];
 			hotelRoom.Sink();
+
+			if(hotelRoom.Sunk)
+			{
+				hotelRooms.Remove(hotelRoom);
+				Destroy(hotelRoom.gameObject);
+			}
+
 		}
 
-		hotelSizeData.CurrentHotelHeight -= 1;
+		for (int i = usedCoordinates.Count - 1; i >= 0; i--)
+		{
+			var usedCoordinate = usedCoordinates[i];
+			usedCoordinates.Remove(usedCoordinate);
 
+			if(usedCoordinate.y > 0)
+			{
+				usedCoordinates.Add(new Vector2(usedCoordinate.x, usedCoordinate.y - 1));
+			}
+		}
+		
+		hotelSizeData.CurrentHotelHeight -= 1;
+		
 	}
 
 	private void UpdatePreview(int index)
