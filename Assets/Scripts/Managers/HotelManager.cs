@@ -14,7 +14,7 @@ public class HotelManager : MonoBehaviour
 
 	public List<GameObject> hotelBackRooms = new List<GameObject>();
 	public List<HotelRoom> hotelRooms = new List<HotelRoom>();
-	public HashSet<Vector2> usedCoordinates = new HashSet<Vector2>();
+	public List<Vector2> usedCoordinates = new List<Vector2>();
 
 	public Vector3 worldToHotelOffset;
 
@@ -46,37 +46,12 @@ public class HotelManager : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.LeftShift))
 		{
-			NewFloor();
+			SinkHotel();
 		}
-
-		if (Input.GetKeyDown(KeyCode.Alpha1))
-		{
-			UpdatePreview(0);
-		}
-
-		if (Input.GetKeyDown(KeyCode.Alpha2))
-		{
-			UpdatePreview(1);
-		}
-
-		if (Input.GetKeyDown(KeyCode.Alpha3))
-		{
-			UpdatePreview(2);
-		}
-
-		if (Input.GetKeyDown(KeyCode.Alpha4))
-		{
-			UpdatePreview(3);
-		}
-
-		if (Input.GetKeyDown(KeyCode.Alpha5))
-		{
-			UpdatePreview(4);
-		}
+		
 	}
 
-
-	public void BuildRoom()
+	private void BuildRoom()
 	{
 		if (roomTypes.Count < selectedRoomIndex) return;
 
@@ -131,7 +106,7 @@ public class HotelManager : MonoBehaviour
 		if (!roomToBuild) return;
 
 		GameObject newRoomObject = Instantiate(roomToBuild, preview.transform.position, preview.transform.rotation);
-		HotelRoom newRoom = roomToBuild.GetComponent<HotelRoom>();
+		HotelRoom newRoom = newRoomObject.GetComponent<HotelRoom>();
 
 		if (!newRoom)
 			return;
@@ -145,7 +120,7 @@ public class HotelManager : MonoBehaviour
 
 	}
 
-	public void NewFloor()
+	private void NewFloor()
 	{
 		if (hotelSizeData != null)
 		{
@@ -166,7 +141,49 @@ public class HotelManager : MonoBehaviour
 		}
 	}
 
-	public void UpdatePreview(int index)
+	private void SinkHotel()
+	{
+
+		for(int i = hotelBackRooms.Count - 1; i >=  0; i--)
+		{
+			var hotelBackroom = hotelBackRooms[i];
+			hotelBackroom.transform.Translate(0, -1f, 0);
+			if (hotelBackroom.transform.position.y < hotelSizeData.MinY)
+			{
+				hotelBackRooms.Remove(hotelBackroom);
+				Destroy(hotelBackroom);
+			}
+		}
+		 
+		for (int i = hotelRooms.Count - 1; i >= 0; i--)
+		{
+			var hotelRoom = hotelRooms[i];
+			hotelRoom.Sink();
+
+			if(hotelRoom.Sunk)
+			{
+				hotelRooms.Remove(hotelRoom);
+				Destroy(hotelRoom.gameObject);
+			}
+
+		}
+
+		for (int i = usedCoordinates.Count - 1; i >= 0; i--)
+		{
+			var usedCoordinate = usedCoordinates[i];
+			usedCoordinates.Remove(usedCoordinate);
+
+			if(usedCoordinate.y > 0)
+			{
+				usedCoordinates.Add(new Vector2(usedCoordinate.x, usedCoordinate.y - 1));
+			}
+		}
+		
+		hotelSizeData.CurrentHotelHeight -= 1;
+		
+	}
+
+	private void UpdatePreview(int index)
 	{
 		selectedRoomIndex = index;
 		

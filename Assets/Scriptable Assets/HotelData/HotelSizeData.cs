@@ -20,7 +20,7 @@ public class HotelSizeData : ScriptableObject
 	[SerializeField]
 	private float currentHotelHeight;
 
-	public float CurrentHotelHeight { get => currentHotelHeight; set => currentHotelHeight = Mathf.Min(value, MaxY - MinY); }
+	public float CurrentHotelHeight { get => currentHotelHeight; set => currentHotelHeight = Mathf.Max( 0f, Mathf.Min(value, MaxY - MinY)); }
 	public float Scale { get => scale; set => scale = value; }
 	public float MinX { get => minX; set => minX = value; }
 	public float MaxX { get => maxX; set => maxX = value; }
