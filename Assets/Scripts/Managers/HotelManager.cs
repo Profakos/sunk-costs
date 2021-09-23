@@ -3,6 +3,51 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+public class HotelSinkingTimer
+{
+	private float timerCurrent = 0f;
+	private float timerTarget = 0f;
+	private bool timerActive = false;
+	private float timerFloorCountDivider;
+
+	private float minTimer = 5f;
+	private float variableTimer = 15f;
+	
+	public float TimerCurrent { get => timerCurrent; set => timerCurrent = value; }
+	public float TimerTarget { get => timerTarget; set => timerTarget = value; }
+	public bool TimerActive { get => timerActive; set => timerActive = value; }
+	public int TimerFloorCountCap { get; set; } = 100;
+
+	public HotelSinkingTimer()
+	{
+		timerFloorCountDivider = 1f / TimerFloorCountCap;
+	}
+
+	public void CalculateSinkTimerTarget(int totalFloorCount)
+	{
+		Debug.Log(timerFloorCountDivider);
+		Debug.Log(Mathf.Max(TimerFloorCountCap - totalFloorCount, 0) * timerFloorCountDivider);
+		timerTarget = minTimer + variableTimer * Mathf.Max(TimerFloorCountCap - totalFloorCount, 0) * timerFloorCountDivider;
+		Debug.Log(timerTarget);
+
+	}
+
+	public bool CheckTimer(int totalFloorCount)
+	{
+		if (!timerActive) return false;
+
+		timerCurrent += Time.deltaTime;
+
+		if (timerCurrent >= timerTarget)
+		{
+			timerCurrent = 0f;
+			CalculateSinkTimerTarget(totalFloorCount);
+			return true;
+		}
+		else return false;
+	}
+}
+
 public class HotelManager : MonoBehaviour
 {
 	public HotelSizeData hotelSizeData;
@@ -18,12 +63,12 @@ public class HotelManager : MonoBehaviour
 
 	public Vector3 worldToHotelOffset;
 
-	public float timerStart = 10f;
-	public float timerCurrent = 0f;
-	public bool timerActive = false;
-
+	private int totalFloorCount = 0;
+	private HotelSinkingTimer hotelSinkingTimer = new HotelSinkingTimer();
+	
 	void Awake()
 	{
+
 		worldToHotelOffset = new Vector3(hotelSizeData.MinX, hotelSizeData.MinY, 0);
 
 		preview = GameObject.Find("RoomPreview").gameObject.GetComponent<RoomPreview>();
@@ -54,17 +99,11 @@ public class HotelManager : MonoBehaviour
 
 	private void AdvanceSinkTimer()
 	{
-		if (!timerActive) return;
-
-		timerCurrent -= Time.deltaTime;
-		
-		if(timerCurrent < 0f)
+		if (this.hotelSinkingTimer.CheckTimer(totalFloorCount))
 		{
 			SinkHotel();
-
-			timerCurrent = timerStart;
-		}
-
+		};
+		
 	}
 
 	private void BuildRoom()
@@ -135,7 +174,7 @@ public class HotelManager : MonoBehaviour
 		}
 
 	}
-
+	
 	private void NewFloor()
 	{
 		if (hotelSizeData != null)
@@ -143,7 +182,8 @@ public class HotelManager : MonoBehaviour
 
 			if (hotelSizeData.MinY + hotelSizeData.CurrentHotelHeight + 1 > hotelSizeData.MaxY) return;
 
-			hotelSizeData.CurrentHotelHeight += 1;
+			hotelSizeData.CurrentHotelHeight++;
+			totalFloorCount++;
 			
 			if (backRoomPrefab != null)
 			{
@@ -154,11 +194,12 @@ public class HotelManager : MonoBehaviour
 				hotelBackRooms.Add(newBackRoom);
 			}
 
-			if(!timerActive && hotelBackRooms.Count > 1)
+			if(!hotelSinkingTimer.TimerActive && hotelSizeData.CurrentHotelHeight > 1)
 			{
-				
-				timerActive = true;
+				hotelSinkingTimer.TimerActive = true;
 			}
+
+			hotelSinkingTimer.CalculateSinkTimerTarget(totalFloorCount);
 
 		}
 	}
