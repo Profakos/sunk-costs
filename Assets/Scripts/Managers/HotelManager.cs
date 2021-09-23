@@ -8,7 +8,6 @@ public class HotelSinkingTimer
 	private float timerCurrent = 0f;
 	private float timerTarget = 0f;
 	private bool timerActive = false;
-	private float timerFloorCountDivider;
 
 	private float minTimer = 5f;
 	private float variableTimer = 15f;
@@ -17,22 +16,18 @@ public class HotelSinkingTimer
 	public float TimerTarget { get => timerTarget; set => timerTarget = value; }
 	public bool TimerActive { get => timerActive; set => timerActive = value; }
 	public int TimerFloorCountCap { get; set; } = 100;
-
+	
 	public HotelSinkingTimer()
 	{
-		timerFloorCountDivider = 1f / TimerFloorCountCap;
 	}
 
 	public void CalculateSinkTimerTarget(int totalFloorCount)
 	{
-		Debug.Log(timerFloorCountDivider);
-		Debug.Log(Mathf.Max(TimerFloorCountCap - totalFloorCount, 0) * timerFloorCountDivider);
-		timerTarget = minTimer + variableTimer * Mathf.Max(TimerFloorCountCap - totalFloorCount, 0) * timerFloorCountDivider;
-		Debug.Log(timerTarget);
-
+		timerTarget = minTimer + variableTimer * Mathf.Max(TimerFloorCountCap - totalFloorCount, 0) / TimerFloorCountCap;
+		
 	}
 
-	public bool CheckTimer(int totalFloorCount)
+	public bool CheckTimer(int totalFloorCount, UnityEngine.UI.Image timerImage)
 	{
 		if (!timerActive) return false;
 
@@ -42,9 +37,19 @@ public class HotelSinkingTimer
 		{
 			timerCurrent = 0f;
 			CalculateSinkTimerTarget(totalFloorCount);
+			updateTimerImage(timerImage);
 			return true;
 		}
-		else return false;
+		else
+		{
+			updateTimerImage(timerImage);
+			return false;
+		}
+	}
+
+	private void updateTimerImage(UnityEngine.UI.Image timerImage)
+	{
+		timerImage.fillAmount = timerCurrent / timerTarget;
 	}
 }
 
@@ -65,11 +70,14 @@ public class HotelManager : MonoBehaviour
 
 	private int totalFloorCount = 0;
 	private HotelSinkingTimer hotelSinkingTimer = new HotelSinkingTimer();
-	
+
+	private UnityEngine.UI.Image timerImage; 
+
 	void Awake()
 	{
-
 		worldToHotelOffset = new Vector3(hotelSizeData.MinX, hotelSizeData.MinY, 0);
+
+		timerImage = GameObject.Find("TimerImage").gameObject.GetComponent<UnityEngine.UI.Image>();
 
 		preview = GameObject.Find("RoomPreview").gameObject.GetComponent<RoomPreview>();
 		hotelSizeData.CurrentHotelHeight = hotelSizeData.InitialHotelHeight;
@@ -79,8 +87,9 @@ public class HotelManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-    }
+		timerImage.fillAmount = 0;
+
+	}
 
     // Update is called once per frame
     void Update()
@@ -99,7 +108,7 @@ public class HotelManager : MonoBehaviour
 
 	private void AdvanceSinkTimer()
 	{
-		if (this.hotelSinkingTimer.CheckTimer(totalFloorCount))
+		if (this.hotelSinkingTimer.CheckTimer(totalFloorCount, timerImage))
 		{
 			SinkHotel();
 		};
