@@ -2412,10 +2412,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7722006129814459298, guid: 8a2439f2f70f9ef4499bf6e0a0404603,
         type: 3}
+      propertyPath: timerStart
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7722006129814459298, guid: 8a2439f2f70f9ef4499bf6e0a0404603,
+        type: 3}
       propertyPath: roomToBuild
       value: 
       objectReference: {fileID: 4778660199440494886, guid: 3954a3c2abcd0364db18fd7515202936,
         type: 3}
+    - target: {fileID: 7722006129814459298, guid: 8a2439f2f70f9ef4499bf6e0a0404603,
+        type: 3}
+      propertyPath: timerCurrent
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7722006129814459298, guid: 8a2439f2f70f9ef4499bf6e0a0404603,
         type: 3}
       propertyPath: backRoomPrefab

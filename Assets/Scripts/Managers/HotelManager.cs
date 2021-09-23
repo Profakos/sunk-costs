@@ -18,6 +18,10 @@ public class HotelManager : MonoBehaviour
 
 	public Vector3 worldToHotelOffset;
 
+	public float timerStart = 10f;
+	public float timerCurrent = 0f;
+	public bool timerActive = false;
+
 	void Awake()
 	{
 		worldToHotelOffset = new Vector3(hotelSizeData.MinX, hotelSizeData.MinY, 0);
@@ -44,11 +48,23 @@ public class HotelManager : MonoBehaviour
 			}
 		}
 
-		if (Input.GetKeyDown(KeyCode.LeftShift))
+		AdvanceSinkTimer();
+		
+	}
+
+	private void AdvanceSinkTimer()
+	{
+		if (!timerActive) return;
+
+		timerCurrent -= Time.deltaTime;
+		
+		if(timerCurrent < 0f)
 		{
 			SinkHotel();
+
+			timerCurrent = timerStart;
 		}
-		
+
 	}
 
 	private void BuildRoom()
@@ -138,9 +154,15 @@ public class HotelManager : MonoBehaviour
 				hotelBackRooms.Add(newBackRoom);
 			}
 
+			if(!timerActive && hotelBackRooms.Count > 1)
+			{
+				
+				timerActive = true;
+			}
+
 		}
 	}
-
+	
 	private void SinkHotel()
 	{
 
