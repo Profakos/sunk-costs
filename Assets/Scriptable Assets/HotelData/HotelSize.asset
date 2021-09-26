@@ -16,5 +16,5 @@ MonoBehaviour:
   minX: -4
   maxX: 4
   minY: -4
-  maxY: 0
-  currentHotelHeight: 4
+  maxY: 4
+  currentHotelHeight: 8
