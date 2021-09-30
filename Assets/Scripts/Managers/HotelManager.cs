@@ -62,5 +62,9 @@ public class HotelManager : MonoBehaviour
 
 		hotelSinkingTimer.CalculateSinkTimerTarget(mapManager.TotalFloorCount);
 	}
-	
+
+	public void UpdatePreviewButton(int index)
+	{
+		mapManager.UpdatePreview(index);
+	}
 }
