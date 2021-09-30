@@ -8,6 +8,10 @@ MonoImporter:
   - preview: {instanceID: 0}
   - backRoomPrefab: {fileID: 3981547880261531114, guid: b4417a7bc64a8014f9eb3d971a8419e9,
       type: 3}
+  - guestPrefab: {fileID: 1325863587677664404, guid: 1c1a764bfba7e424fa6e5677d07b7175,
+      type: 3}
+  - guestSpawnerPos: {instanceID: 0}
+  - guestDespawnerPos: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

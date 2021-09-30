@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7722006129814459297}
   - component: {fileID: 7722006129814459298}
+  - component: {fileID: 7722006129983299994}
   m_Layer: 0
   m_Name: HotelManager
   m_TagString: Manager
@@ -44,6 +45,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hotelSizeData: {fileID: 11400000, guid: 3ca961cb7df0c334e839b637abdbb4ec, type: 2}
+--- !u!114 &7722006129983299994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7722006129814459299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23a8f42cad19afa449aba6082d11fff2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hotelSizeData: {fileID: 11400000, guid: 3ca961cb7df0c334e839b637abdbb4ec, type: 2}
   preview: {fileID: 0}
   selectedRoomIndex: 0
   roomTypes:
@@ -52,3 +66,9 @@ MonoBehaviour:
   - {fileID: 5735215796976646715, guid: 8bea7f180f6143f4996e11848fb1075e, type: 3}
   - {fileID: 7620587257399987059, guid: fe97424197b57c048909821c85f10475, type: 3}
   - {fileID: 2957712916566447360, guid: 47a16eee8c34e7b418058b14d3d48604, type: 3}
+  backRoomPrefab: {fileID: 3981547880261531114, guid: b4417a7bc64a8014f9eb3d971a8419e9,
+    type: 3}
+  hotelBackRooms: []
+  hotelRooms: []
+  usedCoordinates: []
+  worldToHotelOffset: {x: 0, y: 0, z: 0}
