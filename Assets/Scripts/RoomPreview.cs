@@ -7,7 +7,6 @@ public class RoomPreview : MonoBehaviour
 	public SpriteRenderer spriteRenderer;
 	public HotelSizeData hotelSizeData;
 
-
 	void LateUpdate()
 	{
 		Vector3 mousePosition = Input.mousePosition;
