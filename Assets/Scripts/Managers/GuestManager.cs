@@ -6,13 +6,19 @@ public class GuestManager : MonoBehaviour
 {
 	public GameObject guestPrefab;
 
-	private Transform guestSpawner;
 	private Transform guestDespawner;
+	private Transform guestSpawner;
+
+	private Transform guestEntrance;
+	private Transform guestExit;
 
 	void Awake()
 	{
 		guestDespawner = GameObject.Find("GuestDespawner").transform;
 		guestSpawner = GameObject.Find("GuestSpawner").transform;
+
+		guestEntrance = GameObject.Find("GuestEntrance").transform;
+		guestExit = GameObject.Find("GuestExit").transform;
 	}
 
     // Start is called before the first frame update
@@ -31,6 +37,9 @@ public class GuestManager : MonoBehaviour
 	{
 		GameObject guestComponent = Instantiate(guestPrefab, guestSpawner.position, Quaternion.identity);
 		Guest guest = guestComponent.GetComponent<Guest>();
-		guest.ExitPoint = guestDespawner.position;
+
+		guest.DespawnPoint = guestDespawner.position;
+		guest.EntrancePoint = guestEntrance.position;
+		guest.ExitPoint = guestExit.position;
 	}
 }
