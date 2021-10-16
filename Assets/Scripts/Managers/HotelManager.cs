@@ -42,6 +42,9 @@ public class HotelManager : MonoBehaviour
 		
 	}
 
+	/// <summary>
+	/// Sinks the hotel one floor if the time has ran out, and resets the timer
+	/// </summary>
 	private void AdvanceSinkTimer()
 	{
 		if (this.hotelSinkingTimer.CheckTimer(mapManager.TotalFloorCount, timerImage))
@@ -51,6 +54,9 @@ public class HotelManager : MonoBehaviour
 		
 	}
 
+	/// <summary>
+	/// Handles pressing the button that a new floor
+	/// </summary>
 	public void NewFloorButton()
 	{
 		mapManager.NewFloor();
@@ -63,6 +69,10 @@ public class HotelManager : MonoBehaviour
 		hotelSinkingTimer.CalculateSinkTimerTarget(mapManager.TotalFloorCount);
 	}
 
+	/// <summary>
+	/// Handless pressing the button that selects the room type to place
+	/// </summary>
+	/// <param name="index"></param>
 	public void UpdatePreviewButton(int index)
 	{
 		mapManager.UpdatePreview(index);

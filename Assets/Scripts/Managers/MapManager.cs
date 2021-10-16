@@ -40,6 +40,9 @@ public class MapManager : MonoBehaviour
 
 	}
 	
+	/// <summary>
+	/// Creates the selected room type at the current location, if possible
+	/// </summary>
 	public void BuildRoom()
 	{
 		if (roomTypes.Count < selectedRoomIndex) return;
@@ -111,6 +114,9 @@ public class MapManager : MonoBehaviour
 
 	}
 
+	/// <summary>
+	/// Creates a new floor if possible
+	/// </summary>
 	public void NewFloor()
 	{
 		if (hotelSizeData != null)
@@ -132,6 +138,9 @@ public class MapManager : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// Sinks the hotel by one floor
+	/// </summary>
 	public void SinkHotel()
 	{
 
@@ -174,6 +183,10 @@ public class MapManager : MonoBehaviour
 
 	}
 
+	/// <summary>
+	/// Updates the selected room type
+	/// </summary>
+	/// <param name="index"></param>
 	public void UpdatePreview(int index)
 	{
 		selectedRoomIndex = index;

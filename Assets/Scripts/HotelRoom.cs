@@ -14,6 +14,9 @@ public class HotelRoom : MonoBehaviour
 	public bool Sunk { get => sunk; set => sunk = value; }
 	public bool Flooded { get => flooded; set => flooded = value; }
 
+	public delegate void SinkingDelegate(bool floodedOrSunk);
+	public event SinkingDelegate sinkingHandler;
+
 	void Awake()
 	{
 		spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
@@ -30,7 +33,10 @@ public class HotelRoom : MonoBehaviour
     {
         
     }
-
+	
+	/// <summary>
+	/// Sinks the room one tile
+	/// </summary>
 	public void Sink()
 	{
 		transform.Translate(0, -1f, 0);
@@ -48,12 +54,26 @@ public class HotelRoom : MonoBehaviour
 		if(floodedTiles > 0 )
 		{
 			flooded = true;
-			spriteRenderer.color = Color.blue;
+			spriteRenderer.color = Color.yellow;
 		}
 		
 		if(floodedTiles == roomShape.OffsetFromRoomCenter.Length)
 		{
 			sunk = true;
 		}
+
+		if(sinkingHandler != null)
+		sinkingHandler.Invoke(flooded || sunk);
+	}
+
+	public void SubscribeSink(SinkingDelegate e)
+	{
+		sinkingHandler += e;
+	}
+
+	public void UnsubscribeSink(SinkingDelegate e)
+	{
+		if (sinkingHandler == null) return;
+		sinkingHandler -= e;
 	}
 }

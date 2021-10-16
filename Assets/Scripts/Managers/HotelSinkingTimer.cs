@@ -17,12 +17,22 @@ public class HotelSinkingTimer
 	public bool TimerActive { get => timerActive; set => timerActive = value; }
 	public int TimerFloorCountCap { get; set; } = 100;
 	
+	/// <summary>
+	/// Calculate the time until the next sink based on the current floor count
+	/// </summary>
+	/// <param name="totalFloorCount"></param>
 	public void CalculateSinkTimerTarget(int totalFloorCount)
 	{
 		timerTarget = minTimer + variableTimer * Mathf.Max(TimerFloorCountCap - totalFloorCount, 0) / TimerFloorCountCap;
 
 	}
 
+	/// <summary>
+	/// Check if the timer has ran out
+	/// </summary>
+	/// <param name="totalFloorCount"></param>
+	/// <param name="timerImage"></param>
+	/// <returns>Returns if the timer has ran out</returns>
 	public bool CheckTimer(int totalFloorCount, UnityEngine.UI.Image timerImage)
 	{
 		if (!timerActive) return false;
@@ -43,6 +53,10 @@ public class HotelSinkingTimer
 		}
 	}
 
+	/// <summary>
+	/// Sets the fillamount of the timer circle
+	/// </summary>
+	/// <param name="timerImage"></param>
 	private void updateTimerImage(UnityEngine.UI.Image timerImage)
 	{
 		timerImage.fillAmount = timerCurrent / timerTarget;

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GuestManager : MonoBehaviour
 {
+	private MapManager mapManager;
+
 	public GameObject guestPrefab;
 
 	private Transform guestDespawner;
@@ -14,6 +16,8 @@ public class GuestManager : MonoBehaviour
 
 	void Awake()
 	{
+		mapManager = gameObject.GetComponent<MapManager>();
+
 		guestDespawner = GameObject.Find("GuestDespawner").transform;
 		guestSpawner = GameObject.Find("GuestSpawner").transform;
 
@@ -41,5 +45,7 @@ public class GuestManager : MonoBehaviour
 		guest.DespawnPoint = guestDespawner.position;
 		guest.EntrancePoint = guestEntrance.position;
 		guest.ExitPoint = guestExit.position;
+
+		guest.MapManager = mapManager;
 	}
 }
