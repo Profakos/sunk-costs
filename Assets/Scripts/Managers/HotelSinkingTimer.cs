@@ -15,15 +15,15 @@ public class HotelSinkingTimer
 	public float TimerCurrent { get => timerCurrent; set => timerCurrent = value; }
 	public float TimerTarget { get => timerTarget; set => timerTarget = value; }
 	public bool TimerActive { get => timerActive; set => timerActive = value; }
-	public int TimerFloorCountCap { get; set; } = 100;
+	public int TimerSpawnedFloorsCap { get; set; } = 100;
 	
 	/// <summary>
-	/// Calculate the time until the next sink based on the current floor count
+	/// Calculate the time until the next sink based on the current spawned floor count
 	/// </summary>
-	/// <param name="totalFloorCount"></param>
-	public void CalculateSinkTimerTarget(int totalFloorCount)
+	/// <param name="totalSpawnedFloors"></param>
+	public void CalculateSinkTimerTarget(int totalSpawnedFloors)
 	{
-		timerTarget = minTimer + variableTimer * Mathf.Max(TimerFloorCountCap - totalFloorCount, 0) / TimerFloorCountCap;
+		timerTarget = minTimer + variableTimer * Mathf.Max(TimerSpawnedFloorsCap - totalSpawnedFloors, 0) / TimerSpawnedFloorsCap;
 
 	}
 

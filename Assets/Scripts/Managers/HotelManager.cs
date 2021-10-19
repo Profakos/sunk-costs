@@ -47,7 +47,7 @@ public class HotelManager : MonoBehaviour
 	/// </summary>
 	private void AdvanceSinkTimer()
 	{
-		if (this.hotelSinkingTimer.CheckTimer(mapManager.TotalFloorCount, timerImage))
+		if (this.hotelSinkingTimer.CheckTimer(mapManager.TotalSpawnedFloors, timerImage))
 		{
 			mapManager.SinkHotel();
 		};
@@ -66,7 +66,7 @@ public class HotelManager : MonoBehaviour
 			hotelSinkingTimer.TimerActive = true;
 		}
 
-		hotelSinkingTimer.CalculateSinkTimerTarget(mapManager.TotalFloorCount);
+		hotelSinkingTimer.CalculateSinkTimerTarget(mapManager.TotalSpawnedFloors);
 	}
 
 	/// <summary>

@@ -17,7 +17,7 @@ public class MapManager : MonoBehaviour
 
 	public Vector3 worldToHotelOffset;
 
-	public int TotalFloorCount { get; set; } = 0;
+	public int TotalSpawnedFloors { get; set; } = 0;
 
 	void Awake()
 	{
@@ -124,7 +124,7 @@ public class MapManager : MonoBehaviour
 			if (hotelSizeData.MinY + hotelSizeData.CurrentHotelHeight + 1 > hotelSizeData.MaxY) return;
 
 			hotelSizeData.CurrentHotelHeight++;
-			TotalFloorCount++;
+			TotalSpawnedFloors++;
 
 			if (backRoomPrefab != null)
 			{
