@@ -1494,8 +1494,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1237566746}
-        m_TargetAssemblyTypeName: GuestManager, Assembly-CSharp
+      - m_Target: {fileID: 7722006129983299992}
+        m_TargetAssemblyTypeName: HotelManager, Assembly-CSharp
         m_MethodName: DebugSpawnGuest
         m_Mode: 1
         m_Arguments:
@@ -2425,18 +2425,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1237566746 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: -8219206927852149434, guid: 8a2439f2f70f9ef4499bf6e0a0404603,
-    type: 3}
-  m_PrefabInstance: {fileID: 7722006129983299991}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73ff10f31851a4142acd9f1b11cdc427, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1309831053
 GameObject:
   m_ObjectHideFlags: 0
