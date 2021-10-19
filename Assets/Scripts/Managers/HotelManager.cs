@@ -20,16 +20,16 @@ public class HotelManager : MonoBehaviour
 		mapManager = gameObject.GetComponent<MapManager>();
 	}
 
-    // Start is called before the first frame update
-    void Start()
-    {
+	// Start is called before the first frame update
+	void Start()
+	{
 		timerImage.fillAmount = 0;
 		
 	}
 
 	// Update is called once per frame
 	void Update()
-    {
+	{
 		if (Input.GetMouseButtonDown(0))
 		{
 			if(!EventSystem.current.IsPointerOverGameObject())

@@ -37,14 +37,14 @@ public class Guest : MonoBehaviour
 
 	// Start is called before the first frame update
 	void Start()
-    {
+	{
 		target = EntrancePoint;
 
 	}
 	
-    // Update is called once per frame
-    void Update()
-    {
+	// Update is called once per frame
+	void Update()
+	{
 
 		if(transform.position.x >= DespawnPoint.x)
 		{

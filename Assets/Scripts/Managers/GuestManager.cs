@@ -25,17 +25,17 @@ public class GuestManager : MonoBehaviour
 		guestExit = GameObject.Find("GuestExit").transform;
 	}
 
-    // Start is called before the first frame update
-    void Start()
-    {
+	// Start is called before the first frame update
+	void Start()
+	{
 		SpawnGuest();
 	}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	// Update is called once per frame
+	void Update()
+	{
+		
+	}
 
 	private void SpawnGuest()
 	{
