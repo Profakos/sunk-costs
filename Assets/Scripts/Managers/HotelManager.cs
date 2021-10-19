@@ -8,15 +8,20 @@ public class HotelManager : MonoBehaviour
 	public HotelSizeData hotelSizeData;
 
 	private HotelSinkingTimer hotelSinkingTimer = new HotelSinkingTimer();
+	private GuestManager guestManager;
 	private MapManager mapManager;
+	private GameObject debugButtonGroup;
 
 	private UnityEngine.UI.Image timerImage;
 	
 	void Awake()
 	{
+		debugButtonGroup = GameObject.Find("DebugButtonGroup").gameObject;
+		debugButtonGroup.SetActive(false);
 
 		timerImage = GameObject.Find("TimerImage").gameObject.GetComponent<UnityEngine.UI.Image>();
 
+		guestManager = gameObject.GetComponent<GuestManager>();
 		mapManager = gameObject.GetComponent<MapManager>();
 	}
 
@@ -38,9 +43,28 @@ public class HotelManager : MonoBehaviour
 			}
 		}
 
+		if (Input.GetKeyDown(KeyCode.Alpha0))
+		{
+			debugButtonGroup.SetActive(true);
+		}
+
 		AdvanceSinkTimer();
 		
 	}
+	
+	/// <summary>
+	/// Forces the timer to flip over, no matter what
+	/// </summary>
+	public void DebugSinkNow()
+	{
+		mapManager.SinkHotel();
+	}
+
+	public void DebugSpawnGuest()
+	{
+		guestManager.SpawnGuest();
+	}
+
 
 	/// <summary>
 	/// Sinks the hotel one floor if the time has ran out, and resets the timer

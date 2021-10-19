@@ -37,7 +37,7 @@ public class GuestManager : MonoBehaviour
 		
 	}
 
-	private void SpawnGuest()
+	public void SpawnGuest()
 	{
 		GameObject guestComponent = Instantiate(guestPrefab, guestSpawner.position, Quaternion.identity);
 		Guest guest = guestComponent.GetComponent<Guest>();
