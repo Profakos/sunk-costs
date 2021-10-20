@@ -43,11 +43,17 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: GuestBehindHotel
+    uniqueID: 3636687943
+    locked: 0
   - name: Backrooms
     uniqueID: 2860402895
     locked: 0
   - name: Rooms
     uniqueID: 2847623247
+    locked: 0
+  - name: GuestInRoom
+    uniqueID: 1402942665
     locked: 0
   - name: Preview
     uniqueID: 2712762525
