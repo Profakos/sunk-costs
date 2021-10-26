@@ -64,7 +64,10 @@ public class Guest : MonoBehaviour
 	private void OnDestroy()
 	{
 		if (currentRoom != null)
+		{
+			currentRoom.GuestAmount--;
 			currentRoom.UnsubscribeSink(HandleSinking);
+		}
 	}
 
 	/// <summary>
@@ -116,18 +119,23 @@ public class Guest : MonoBehaviour
 	{
 		HotelRoom roomToVisit = null;
 
-		List<HotelRoom> visitableRooms = MapManager.hotelRooms.FindAll(r => !r.Flooded && !r.Sunk && r != currentRoom);
+		List<HotelRoom> visitableRooms = MapManager.hotelRooms.FindAll(r => !r.Flooded && !r.Sunk && r != currentRoom
+		&& !r.AtCapacity);
 
 		if(visitableRooms.Count > 0)
 		{
-			int random = Random.Range(0, visitableRooms.Count);
-			roomToVisit = visitableRooms[random];
+			int randomRoomIndex = Random.Range(0, visitableRooms.Count);
+			roomToVisit = visitableRooms[randomRoomIndex];
 		}
 		
 		if (roomToVisit != null)
 		{
 			sprite.sortingLayerID = SortingLayer.NameToID("GuestInRoom");
-			transform.position = roomToVisit.transform.position;
+
+			int offsetIndex = Random.Range(0, roomToVisit.roomShape.OffsetFromRoomCenter.Length);
+
+			transform.position = (Vector2)roomToVisit.transform.position + roomToVisit.roomShape.OffsetFromRoomCenter[offsetIndex];
+
 			currentActivity = GuestActivity.Enjoying;
 			enjoyTimeLeft = enjoyTimePerRoom;
 
@@ -145,10 +153,14 @@ public class Guest : MonoBehaviour
 	private void ChangeRoom(HotelRoom newRoom)
 	{
 		if (currentRoom != null)
+		{
+			currentRoom.GuestAmount--;
 			currentRoom.UnsubscribeSink(HandleSinking);
+		}
 
-		currentRoom = newRoom;
-		
+			currentRoom = newRoom;
+			currentRoom.GuestAmount++;
+
 		if (currentRoom != null)
 			currentRoom.SubscribeSink(HandleSinking);
 

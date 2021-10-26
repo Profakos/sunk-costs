@@ -6,13 +6,20 @@ public class HotelRoom : MonoBehaviour
 {
 	public RoomShapeData roomShape;
 	public HotelSizeData hotelSizeData;
-	private bool sunk;
-	private bool flooded;
+
+	[SerializeField]
+	private int capacity;
+	[SerializeField]
+	private int guestAmount;
+
+	public int Capacity { get { return capacity; } } 
+	public bool AtCapacity => guestAmount >= Capacity;
 
 	public SpriteRenderer spriteRenderer;
 
-	public bool Sunk { get => sunk; set => sunk = value; }
-	public bool Flooded { get => flooded; set => flooded = value; }
+	public bool Sunk { get; set; }
+	public bool Flooded { get; set; }
+	public int GuestAmount { get => guestAmount; set => guestAmount = value; }
 
 	public delegate void SinkingDelegate(bool floodedOrSunk);
 	public event SinkingDelegate sinkingHandler;
@@ -53,17 +60,17 @@ public class HotelRoom : MonoBehaviour
 
 		if(floodedTiles > 0 )
 		{
-			flooded = true;
+			Flooded = true;
 			spriteRenderer.color = Color.yellow;
 		}
 		
 		if(floodedTiles == roomShape.OffsetFromRoomCenter.Length)
 		{
-			sunk = true;
+			Sunk = true;
 		}
 
 		if(sinkingHandler != null)
-		sinkingHandler.Invoke(flooded || sunk);
+		sinkingHandler.Invoke(Flooded || Sunk);
 	}
 
 	public void SubscribeSink(SinkingDelegate e)
@@ -76,4 +83,5 @@ public class HotelRoom : MonoBehaviour
 		if (sinkingHandler == null) return;
 		sinkingHandler -= e;
 	}
+	
 }

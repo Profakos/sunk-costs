@@ -64,6 +64,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
         type: 3}
+      propertyPath: capacity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
+        type: 3}
       propertyPath: roomShape
       value: 
       objectReference: {fileID: 11400000, guid: a9bc9985ac088df428e4069fe0fa97f8,
