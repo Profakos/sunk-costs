@@ -26,6 +26,9 @@ public class Guest : MonoBehaviour
 	private float enjoyTimeLeft = 0f;
 	private int numOfRoomsToVisit = 2;
 
+	private float currentPathfindCooldown = 0f;
+	private const float pathfindCooldown = 0.5f;
+
 	private HotelRoom currentRoom = null;
 
 	void Awake()
@@ -88,6 +91,7 @@ public class Guest : MonoBehaviour
 			case GuestActivity.Enjoying:
 				if (enjoyTimeLeft <= 0)
 				{
+					moving = false; 
 					if(numOfRoomsToVisit > 0)
 					{
 						TryFindRoom();
@@ -99,6 +103,21 @@ public class Guest : MonoBehaviour
 				}
 				else
 				{
+					if(!moving)
+					{
+						// 20% chance to move around in room
+						if(Random.Range(0, 5) == 0)
+							MoveAroundInRoom();
+					}
+					else
+					{
+						if (distanceToTarget < minimumTargetDistance)
+						{
+							transform.position = target;	
+							moving = false;
+						}
+					}
+
 					enjoyTimeLeft -= Time.deltaTime;
 				}
 				break;
@@ -113,10 +132,46 @@ public class Guest : MonoBehaviour
 	}
 
 	/// <summary>
+	/// Moves around in the room, looking for a random spot
+	/// </summary>
+	private void MoveAroundInRoom()
+	{
+		Vector2 currentOffset = transform.position - currentRoom.transform.position;
+		
+		List<Vector2> possibleDirs = new List<Vector2>();
+
+		foreach(Vector2 v in currentRoom.roomShape.OffsetFromRoomCenter)
+		{
+			
+			if (Vector2.Distance(v, currentOffset) == 1f)
+			{
+				possibleDirs.Add(v);
+			}
+		}
+
+		if (possibleDirs.Count == 0)
+		{
+			moving = false;
+		}
+		else
+		{
+			target = (Vector2) currentRoom.transform.position + possibleDirs[Random.Range(0, possibleDirs.Count)];
+			moving = true;
+		}
+	}
+
+	/// <summary>
 	/// Tries to find a room to stay in, returns if it is successful
 	/// </summary>
 	private void TryFindRoom()
-	{
+	{		
+
+		if(currentPathfindCooldown > 0f)
+		{
+			currentPathfindCooldown -= Time.deltaTime;
+			return;
+		}
+
 		HotelRoom roomToVisit = null;
 
 		List<HotelRoom> visitableRooms = MapManager.hotelRooms.FindAll(r => !r.Flooded && !r.Sunk && r != currentRoom
@@ -126,6 +181,10 @@ public class Guest : MonoBehaviour
 		{
 			int randomRoomIndex = Random.Range(0, visitableRooms.Count);
 			roomToVisit = visitableRooms[randomRoomIndex];
+		}
+		else
+		{
+			currentPathfindCooldown = pathfindCooldown;
 		}
 		
 		if (roomToVisit != null)
@@ -172,6 +231,9 @@ public class Guest : MonoBehaviour
 	/// <param name="floodedOrSunk"></param>
 	private void HandleSinking(bool floodedOrSunk)
 	{
+
+		target += new Vector2(0, -1);
+
 		if(!floodedOrSunk)
 		{
 			transform.Translate(0, -1f, 0);
