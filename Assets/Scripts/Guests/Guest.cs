@@ -105,9 +105,19 @@ public class Guest : MonoBehaviour
 				{
 					if(!moving)
 					{
-						// 20% chance to move around in room
-						if(Random.Range(0, 5) == 0)
-							MoveAroundInRoom();
+						if(currentPathfindCooldown <= 0)
+						{ 
+							// 20% chance to move around in room
+							if (Random.Range(0, 5) == 0)
+								MoveAroundInRoom();
+
+							currentPathfindCooldown = pathfindCooldown;
+						}
+						else
+						{
+							currentPathfindCooldown -= Time.deltaTime;
+						}
+						 
 					}
 					else
 					{
