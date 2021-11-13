@@ -227,7 +227,7 @@ public class Guest : MonoBehaviour
 		{
 			sprite.sortingLayerID = SortingLayer.NameToID("GuestInRoom");
 
-			transform.position = (Vector2)roomToVisit.transform.position;
+			transform.position = (Vector2)roomToVisit.transform.position + roomToVisit.doorOffset;
 
 			currentActivity = GuestActivity.Enjoying;
 			enjoyTimeLeft = enjoyTimePerRoom;
