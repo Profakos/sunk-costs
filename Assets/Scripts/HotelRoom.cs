@@ -8,11 +8,12 @@ public class HotelRoom : MonoBehaviour
 	public HotelSizeData hotelSizeData;
 
 	[SerializeField]
-	private int capacity;
+	readonly private int capacity;
 	[SerializeField]
 	private int guestAmount;
+	public Vector2 doorOffset;
 
-	public int Capacity { get { return capacity; } } 
+	public int Capacity { get => capacity; } 
 	public bool AtCapacity => guestAmount >= Capacity;
 
 	public SpriteRenderer spriteRenderer;
