@@ -41,6 +41,15 @@ public class HotelRoom : MonoBehaviour
 	{
 		
 	}
+
+	/// <summary>
+	/// Returns the position of the room's door
+	/// </summary>
+	/// <returns></returns>
+	public Vector2 DoorPosition()
+	{
+		return (Vector2)gameObject.transform.position + doorOffset;
+	}
 	
 	/// <summary>
 	/// Sinks the room one tile

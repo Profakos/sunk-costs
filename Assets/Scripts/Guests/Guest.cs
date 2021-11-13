@@ -99,7 +99,7 @@ public class Guest : MonoBehaviour
 							moving = false;
 						}
 					}
-					else if (isAtRoomDoor())
+					else if (IsAtRoomDoor())
 					{
 						if (numOfRoomsToVisit > 0)
 						{
@@ -112,7 +112,7 @@ public class Guest : MonoBehaviour
 					}
 					else
 					{
-						target = (Vector2)currentRoom.transform.position + currentRoom.doorOffset;
+						target = PathTowardsDoor();
 						moving = true;
 					}
 				}
@@ -156,11 +156,16 @@ public class Guest : MonoBehaviour
 		}
 	}
 
+	private Vector2 FindCurrentOffset()
+	{
+		return transform.position - currentRoom.transform.position;
+	}
+
 	/// <summary>
 	/// Is the guest at the door?
 	/// </summary>
 	/// <returns></returns>
-	private bool isAtRoomDoor()
+	private bool IsAtRoomDoor()
 	{
 		if (currentRoom == null) return true;
 
@@ -172,7 +177,7 @@ public class Guest : MonoBehaviour
 	/// </summary>
 	private void MoveAroundInRoom()
 	{
-		Vector2 currentOffset = transform.position - currentRoom.transform.position;
+		Vector2 currentOffset = FindCurrentOffset();
 		
 		List<Vector2> possibleDirs = new List<Vector2>();
 
@@ -194,6 +199,24 @@ public class Guest : MonoBehaviour
 			target = (Vector2) currentRoom.transform.position + possibleDirs[Random.Range(0, possibleDirs.Count)];
 			moving = true;
 		}
+	}
+
+	/// <summary>
+	/// paths 
+	/// </summary>
+	/// <returns></returns>
+	private Vector2 PathTowardsDoor()
+	{
+		Vector2 doorPosition = currentRoom.DoorPosition();
+
+		Vector2 currentPos = gameObject.transform.position;
+
+		if (doorPosition.y == currentPos.y)
+		{
+			return doorPosition;
+		}
+		
+		return new Vector2(currentPos.x, doorPosition.y);
 	}
 
 	/// <summary>
@@ -227,7 +250,7 @@ public class Guest : MonoBehaviour
 		{
 			sprite.sortingLayerID = SortingLayer.NameToID("GuestInRoom");
 
-			transform.position = (Vector2)roomToVisit.transform.position + roomToVisit.doorOffset;
+			transform.position = roomToVisit.DoorPosition();
 
 			currentActivity = GuestActivity.Enjoying;
 			enjoyTimeLeft = enjoyTimePerRoom;

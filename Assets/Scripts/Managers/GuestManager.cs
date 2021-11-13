@@ -36,7 +36,7 @@ public class GuestManager : MonoBehaviour
 	{
 		
 	}
-
+	
 	public void SpawnGuest()
 	{
 		GameObject guestComponent = Instantiate(guestPrefab, guestSpawner.position, Quaternion.identity);
