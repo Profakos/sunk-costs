@@ -16,7 +16,7 @@ public class Guest : MonoBehaviour
 	[SerializeField]
 	private GuestActivity currentActivity;
 
-	private float minimumTargetDistance = 0.01f;
+	private float minimumTargetDistance = 0.02f;
 	
 	[SerializeField]
 	private Vector2 target;
@@ -91,14 +91,29 @@ public class Guest : MonoBehaviour
 			case GuestActivity.Enjoying:
 				if (enjoyTimeLeft <= 0)
 				{
-					moving = false; 
-					if(numOfRoomsToVisit > 0)
+					if(moving)
 					{
-						TryFindRoom();
+						if (distanceToTarget < minimumTargetDistance)
+						{
+							transform.position = target;
+							moving = false;
+						}
+					}
+					else if (isAtRoomDoor())
+					{
+						if (numOfRoomsToVisit > 0)
+						{
+							TryFindRoom();
+						}
+						else
+						{
+							BeginLeaving();
+						}
 					}
 					else
 					{
-						BeginLeaving();
+						target = (Vector2)currentRoom.transform.position + currentRoom.doorOffset;
+						moving = true;
 					}
 				}
 				else
@@ -139,6 +154,17 @@ public class Guest : MonoBehaviour
 
 				break;
 		}
+	}
+
+	/// <summary>
+	/// Is the guest at the door?
+	/// </summary>
+	/// <returns></returns>
+	private bool isAtRoomDoor()
+	{
+		if (currentRoom == null) return true;
+
+		return (Vector2) gameObject.transform.position == (Vector2) currentRoom.transform.position + currentRoom.doorOffset;
 	}
 
 	/// <summary>
