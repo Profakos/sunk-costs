@@ -8,7 +8,7 @@ public class HotelRoom : MonoBehaviour
 	public HotelSizeData hotelSizeData;
 
 	[SerializeField]
-	readonly private int capacity;
+	private int capacity;
 	[SerializeField]
 	private int guestAmount;
 	public Vector2 doorOffset;
