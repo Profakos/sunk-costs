@@ -112,8 +112,7 @@ public class Guest : MonoBehaviour
 					}
 					else
 					{
-						target = PathTowardsDoor();
-						moving = true;
+						PathAndMoveTowardsTile(currentRoom.DoorPosition());
 					}
 				}
 				else
@@ -124,7 +123,7 @@ public class Guest : MonoBehaviour
 						{ 
 							// 20% chance to move around in room
 							if (Random.Range(0, 5) == 0)
-								MoveAroundInRoom();
+								MoveToNeighbouringTile();
 
 							currentPathfindCooldown = pathfindCooldown;
 						}
@@ -156,67 +155,97 @@ public class Guest : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// Finds the current room's offset that the guest is standing on
+	/// </summary>
+	/// <returns>The offset of the guest compared to the current room's pivot</returns>
 	private Vector2 FindCurrentOffset()
 	{
 		return transform.position - currentRoom.transform.position;
 	}
 
 	/// <summary>
+	/// Finds all the tiles that are one manhatten distance away from the guest
+	/// </summary>
+	/// <returns>All tiles neighbouring in the cardinal directions</returns>
+	private List<Vector2> FindPossibleTilesToMoveTo()
+	{
+		Vector2 currentOffset = FindCurrentOffset();
+		List<Vector2> possibleOffsets = new List<Vector2>();
+
+		foreach (Vector2 v in currentRoom.roomShape.OffsetFromRoomCenter)
+		{
+
+			if (Vector2.Distance(v, currentOffset) == 1f)
+			{
+				possibleOffsets.Add(v);
+			}
+		}
+
+		return possibleOffsets;
+	}
+
+
+	/// <summary>
 	/// Is the guest at the door?
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>boolean that displays if the guest is on the door's position</returns>
 	private bool IsAtRoomDoor()
 	{
 		if (currentRoom == null) return true;
 
-		return (Vector2) gameObject.transform.position == (Vector2) currentRoom.transform.position + currentRoom.doorOffset;
+		return (Vector2) transform.position == (Vector2) currentRoom.transform.position + currentRoom.doorOffset;
 	}
 
 	/// <summary>
-	/// Moves around in the room, looking for a random spot
+	/// Moves around in the room, looking for a random neighbouring spot
 	/// </summary>
-	private void MoveAroundInRoom()
+	private void MoveToNeighbouringTile()
 	{
-		Vector2 currentOffset = FindCurrentOffset();
-		
-		List<Vector2> possibleDirs = new List<Vector2>();
+		List<Vector2> possibleOffsets = FindPossibleTilesToMoveTo();
 
-		foreach(Vector2 v in currentRoom.roomShape.OffsetFromRoomCenter)
-		{
-			
-			if (Vector2.Distance(v, currentOffset) == 1f)
-			{
-				possibleDirs.Add(v);
-			}
-		}
-
-		if (possibleDirs.Count == 0)
+		if (possibleOffsets.Count == 0)
 		{
 			moving = false;
 		}
 		else
 		{
-			target = (Vector2) currentRoom.transform.position + possibleDirs[Random.Range(0, possibleDirs.Count)];
+			target = (Vector2) currentRoom.transform.position + possibleOffsets[Random.Range(0, possibleOffsets.Count)];
 			moving = true;
 		}
 	}
 
 	/// <summary>
-	/// paths 
+	/// Finds the next tile to move towards 
 	/// </summary>
-	/// <returns></returns>
-	private Vector2 PathTowardsDoor()
+	private void PathAndMoveTowardsTile(Vector2 targetPosition)
 	{
-		Vector2 doorPosition = currentRoom.DoorPosition();
-
-		Vector2 currentPos = gameObject.transform.position;
-
-		if (doorPosition.y == currentPos.y)
+		List<Vector2> possibleOffsets = FindPossibleTilesToMoveTo();
+		
+		if(possibleOffsets.Count == 0)
 		{
-			return doorPosition;
+			moving = false;
+			return;
 		}
 		
-		return new Vector2(currentPos.x, doorPosition.y);
+		//default is not moving
+		float currentMinDistance = Vector2.Distance(targetPosition, transform.position);
+		Vector2 possibleTarget = transform.position;
+		
+		foreach (Vector2 possibleOffset in possibleOffsets)
+		{
+			Vector2 testPosition = (Vector2)currentRoom.transform.position + possibleOffset; 
+			float distance = Vector2.Distance(targetPosition, testPosition);
+
+			if (distance < currentMinDistance)
+			{
+				currentMinDistance = distance;
+				possibleTarget = testPosition;
+			}
+		}
+
+		target = possibleTarget;
+		moving = possibleTarget != (Vector2)transform.position; 
 	}
 
 	/// <summary>
