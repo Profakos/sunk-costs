@@ -112,7 +112,7 @@ public class Guest : MonoBehaviour
 					}
 					else
 					{
-						PathAndMoveTowardsTile(currentRoom.DoorPosition());
+						PathAndMoveTowardsTile(currentRoom.doorOffset);
 					}
 				}
 				else
@@ -218,34 +218,21 @@ public class Guest : MonoBehaviour
 	/// <summary>
 	/// Finds the next tile to move towards 
 	/// </summary>
-	private void PathAndMoveTowardsTile(Vector2 targetPosition)
+	private void PathAndMoveTowardsTile(Vector2 targetOffset)
 	{
-		List<Vector2> possibleOffsets = FindPossibleTilesToMoveTo();
+        Vector2 myOff = FindCurrentOffset();
+        Debug.Log("find path from "+myOff+" to "+targetOffset);
+        List<Vector2> shortest_path = currentRoom.GetShortestPath(myOff, targetOffset);
+        Debug.Log("path = "+string.Join(",", shortest_path.ToArray()));
 		
-		if(possibleOffsets.Count == 0)
+		if(shortest_path.Count < 2)
 		{
 			moving = false;
 			return;
 		}
 		
-		//default is not moving
-		float currentMinDistance = Vector2.Distance(targetPosition, transform.position);
-		Vector2 possibleTarget = transform.position;
-		
-		foreach (Vector2 possibleOffset in possibleOffsets)
-		{
-			Vector2 testPosition = (Vector2)currentRoom.transform.position + possibleOffset; 
-			float distance = Vector2.Distance(targetPosition, testPosition);
-
-			if (distance < currentMinDistance)
-			{
-				currentMinDistance = distance;
-				possibleTarget = testPosition;
-			}
-		}
-
-		target = possibleTarget;
-		moving = possibleTarget != (Vector2)transform.position; 
+		target = (Vector2) currentRoom.transform.position + shortest_path[1];
+		moving = true;
 	}
 
 	/// <summary>
