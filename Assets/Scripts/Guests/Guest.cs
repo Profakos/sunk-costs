@@ -290,11 +290,13 @@ public class Guest : MonoBehaviour
 			currentRoom.UnsubscribeSink(HandleSinking);
 		}
 
-			currentRoom = newRoom;
-			currentRoom.GuestAmount++;
+		currentRoom = newRoom;
 
 		if (currentRoom != null)
+		{
+			currentRoom.GuestAmount++;
 			currentRoom.SubscribeSink(HandleSinking);
+		}
 
 	}
 
@@ -322,6 +324,8 @@ public class Guest : MonoBehaviour
 	/// </summary>
 	private void BeginLeaving()
 	{
+		ChangeRoom(null);
+
 		transform.position = ExitPoint;
 		sprite.sortingLayerID = SortingLayer.NameToID("GuestBehindHotel");
 		target = DespawnPoint;
