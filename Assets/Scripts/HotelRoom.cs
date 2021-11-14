@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -94,4 +95,80 @@ public class HotelRoom : MonoBehaviour
 		sinkingHandler -= e;
 	}
 	
+	public struct PathNodeData
+	{
+        public float dist { get; set; }
+        public Vector2 parent { get; set; }
+    }
+	
+	public List<Vector2> GetShortestPath(Vector2 start, Vector2 end)
+    {
+        if(start == end)
+        {
+            Debug.Log("start == end");
+            return new List<Vector2>();
+        }
+        Dictionary<Vector2, List<Vector2>> graph = roomShape.GetGraph();
+        Dictionary<Vector2, PathNodeData> pathData = new Dictionary<Vector2, PathNodeData>();
+        HashSet<Vector2> visited = new HashSet<Vector2>();
+        HashSet<Vector2> edge = new HashSet<Vector2>();
+        pathData.Add(end, new PathNodeData {dist = 0, parent = end});
+        visited.Add(end);
+        foreach(Vector2 neighbor in graph[end])
+        {
+            edge.Add(neighbor);
+            pathData.Add(neighbor, new PathNodeData {dist = 1, parent = end});
+        }
+        while(true)
+        {
+            if(edge.Count == 0)
+            {
+                // no path found
+                return new List<Vector2>();
+            }
+            // sort edge for distance
+            Vector2[] edgearray = new Vector2[edge.Count];
+            edge.CopyTo(edgearray);
+            Array.Sort<Vector2>(edgearray, (x,y) => pathData[x].dist.CompareTo(pathData[y].dist));
+            
+            Vector2 current = edgearray[0];
+            edge.Remove(current);
+            visited.Add(current);
+
+            if(current == start)
+            {
+                // there is a path
+                List<Vector2> solution = new List<Vector2>();
+                do
+                {
+                    solution.Add(current);
+                    current = pathData[current].parent;
+                } while(current != end);
+                solution.Add(end);
+                return solution;
+            }
+            
+            foreach(Vector2 neighbor in graph[current])
+            {
+                if(!visited.Contains(neighbor))
+                {
+                    if(!edge.Contains(neighbor))
+                    {
+                        edge.Add(neighbor);
+                        pathData.Add(neighbor, new PathNodeData {dist = pathData[current].dist+1, parent = current});
+                    }
+                    else
+                    {
+                        if(pathData[neighbor].dist > pathData[current].dist + 1)
+                        {
+                            PathNodeData old_data = pathData[neighbor];
+                            old_data.dist = pathData[current].dist + 1;
+                            old_data.parent = current;
+                            pathData[neighbor] = old_data;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
