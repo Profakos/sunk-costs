@@ -146,6 +146,10 @@ public class Guest : MonoBehaviour
 				}
 				break;
 			case GuestActivity.Leaving:
+				if (distanceToTarget < minimumTargetDistance)
+				{
+					Destroy(this.gameObject);
+				}
 				break;
 			case GuestActivity.Waiting:
 
