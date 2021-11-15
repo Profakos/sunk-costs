@@ -30,6 +30,7 @@ public class Guest : MonoBehaviour
 	private const float pathfindCooldown = 0.5f;
 
 	private HotelRoom currentRoom = null;
+	private List<Vector2> shortestPath = null;
 
 	void Awake()
 	{
@@ -101,6 +102,7 @@ public class Guest : MonoBehaviour
 					}
 					else if (IsAtRoomDoor())
 					{
+						shortestPath = null;
 						if (numOfRoomsToVisit > 0)
 						{
 							TryFindRoom();
@@ -224,18 +226,22 @@ public class Guest : MonoBehaviour
 	/// </summary>
 	private void PathAndMoveTowardsTile(Vector2 targetOffset)
 	{
-        Vector2 myOff = FindCurrentOffset();
-        Debug.Log("find path from "+myOff+" to "+targetOffset);
-        List<Vector2> shortest_path = currentRoom.GetShortestPath(myOff, targetOffset);
-        Debug.Log("path = "+string.Join(",", shortest_path.ToArray()));
-		
-		if(shortest_path.Count < 2)
+		if(shortestPath == null)
+		{
+			Vector2 myOff = FindCurrentOffset();
+			Debug.Log("find path from "+myOff+" to "+targetOffset);
+			shortestPath = currentRoom.GetShortestPath(myOff, targetOffset);
+			Debug.Log("path = "+string.Join(",", shortestPath.ToArray()));
+		}
+		// needs to have at least 2 targets in it, otherwise reached the end
+		if(shortestPath.Count < 2)
 		{
 			moving = false;
 			return;
 		}
-		
-		target = (Vector2) currentRoom.transform.position + shortest_path[1];
+		// remove the reached target, and set the next
+		shortestPath.RemoveAt(0);
+		target = (Vector2) currentRoom.transform.position + shortestPath[0];
 		moving = true;
 	}
 
