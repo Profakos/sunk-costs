@@ -101,6 +101,12 @@ public class HotelRoom : MonoBehaviour
         public Vector2 parent { get; set; }
     }
 	
+	/// <summary>
+	/// Finds the shortest path, reverse from end to start
+	/// </summary>
+	/// <param name="start"></param>
+	/// <param name="end"></param>
+	/// <returns>The path from start to end</returns>
 	public List<Vector2> GetShortestPath(Vector2 start, Vector2 end)
     {
         if(start == end)
@@ -119,13 +125,8 @@ public class HotelRoom : MonoBehaviour
             edge.Add(neighbor);
             pathData.Add(neighbor, new PathNodeData {dist = 1, parent = end});
         }
-        while(true)
+        while(edge.Count != 0)
         {
-            if(edge.Count == 0)
-            {
-                // no path found
-                return new List<Vector2>();
-            }
             // sort edge for distance
             Vector2[] edgearray = new Vector2[edge.Count];
             edge.CopyTo(edgearray);
@@ -145,6 +146,7 @@ public class HotelRoom : MonoBehaviour
                     current = pathData[current].parent;
                 } while(current != end);
                 solution.Add(end);
+
                 return solution;
             }
             
@@ -170,5 +172,8 @@ public class HotelRoom : MonoBehaviour
                 }
             }
         }
-    }
+
+		// no path found
+		return new List<Vector2>();
+	}
 }

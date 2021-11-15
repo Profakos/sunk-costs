@@ -13,9 +13,7 @@ public class RoomShapeData : ScriptableObject
 
 	public string ShapeName { get => shapeName; set => shapeName = value; }
 	public Vector2[] OffsetFromRoomCenter { get => offsetFromRoomCenter; set => offsetFromRoomCenter = value; }
-
-    
-    private Dictionary<Vector2, List<Vector2>> graph;
+	private Dictionary<Vector2, List<Vector2>> graph;
 
     public Dictionary<Vector2, List<Vector2>> GetGraph()
     {
