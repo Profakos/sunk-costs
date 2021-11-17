@@ -264,15 +264,14 @@ public class Guest : MonoBehaviour
 		List<HotelRoom> visitableRooms = MapManager.hotelRooms.FindAll(r => !r.Flooded && !r.Sunk && r != currentRoom
 		&& !r.AtCapacity);
 
-		if(visitableRooms.Count > 0)
-		{
-			int randomRoomIndex = Random.Range(0, visitableRooms.Count);
-			roomToVisit = visitableRooms[randomRoomIndex];
-		}
-		else
+		if(visitableRooms.Count == 0)
 		{
 			currentPathfindCooldown = pathfindCooldown;
+			return;
 		}
+
+		int randomRoomIndex = Random.Range(0, visitableRooms.Count);
+		roomToVisit = visitableRooms[randomRoomIndex];
 		
 		if (roomToVisit != null)
 		{
