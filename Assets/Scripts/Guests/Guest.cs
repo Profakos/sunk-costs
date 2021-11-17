@@ -191,6 +191,17 @@ public class Guest : MonoBehaviour
 		return possibleOffsets;
 	}
 
+	/// <summary>
+	/// Forces to leave the hotel
+	/// </summary>
+	public void ForceLeave()
+	{
+		enjoyTimeLeft = 0f;
+		numOfRoomsToVisit = 0;
+		BeginLeaving();
+
+	}
+
 
 	/// <summary>
 	/// Is the guest at the door?
@@ -334,10 +345,13 @@ public class Guest : MonoBehaviour
 	/// </summary>
 	private void BeginLeaving()
 	{
-		ChangeRoom(null);
+		if(currentRoom != null)
+		{
+			ChangeRoom(null);
+			transform.position = ExitPoint;
+			sprite.sortingLayerID = SortingLayer.NameToID("GuestBehindHotel");
+		}
 
-		transform.position = ExitPoint;
-		sprite.sortingLayerID = SortingLayer.NameToID("GuestBehindHotel");
 		target = DespawnPoint;
 		currentActivity = GuestActivity.Leaving;
 		moving = true;

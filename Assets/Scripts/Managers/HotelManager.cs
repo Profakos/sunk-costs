@@ -60,18 +60,44 @@ public class HotelManager : MonoBehaviour
 		mapManager.SinkHotel();
 	}
 
+	/// <summary>
+	/// Spawns a guest
+	/// </summary>
 	public void DebugSpawnGuest()
 	{
 		guestManager.SpawnGuest();
 	}
 
+	/// <summary>
+	/// Toggles sinking
+	/// </summary>
+	public void DebugToggleSink()
+	{
+		hotelSinkingTimer.TimerActive = !hotelSinkingTimer.TimerActive;
+	}
+
+	/// <summary>
+	/// Deletes guests
+	/// </summary>
+	public void DebugDeleteGuests()
+	{
+		guestManager.DeleteGuests();
+	}
+
+	/// <summary>
+	/// Forces guests to leave
+	/// </summary>
+	public void DebugForceGuestsLeave()
+	{
+		guestManager.ForceGuestsLeave();
+	}
 
 	/// <summary>
 	/// Sinks the hotel one floor if the time has ran out, and resets the timer
 	/// </summary>
 	private void AdvanceSinkTimer()
 	{
-		if (this.hotelSinkingTimer.CheckTimer(mapManager.TotalSpawnedFloors, timerImage))
+		if (hotelSinkingTimer.CheckTimer(mapManager.TotalSpawnedFloors, timerImage))
 		{
 			mapManager.SinkHotel();
 		};

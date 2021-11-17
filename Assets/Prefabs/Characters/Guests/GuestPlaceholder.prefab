@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -7038338113402846368}
   m_Layer: 0
   m_Name: GuestPlaceholder
-  m_TagString: Untagged
+  m_TagString: Guest
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -97,6 +97,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d9075eed560bef4d84726f9cc382db8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentActivity: 0
+  target: {x: 0, y: 0}
 --- !u!50 &-7038338113402846368
 Rigidbody2D:
   serializedVersion: 4
