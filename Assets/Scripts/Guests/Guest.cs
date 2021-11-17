@@ -177,16 +177,7 @@ public class Guest : MonoBehaviour
 	private List<Vector2> FindPossibleTilesToMoveTo()
 	{
 		Vector2 currentOffset = FindCurrentOffset();
-		List<Vector2> possibleOffsets = new List<Vector2>();
-
-		foreach (Vector2 v in currentRoom.roomShape.OffsetFromRoomCenter)
-		{
-
-			if (Vector2.Distance(v, currentOffset) == 1f)
-			{
-				possibleOffsets.Add(v);
-			}
-		}
+		List<Vector2> possibleOffsets = new List<Vector2>(currentRoom.GetGraph()[currentOffset]);
 
 		return possibleOffsets;
 	}
