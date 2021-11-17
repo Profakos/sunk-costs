@@ -36,6 +36,29 @@ public class GuestManager : MonoBehaviour
 	{
 		
 	}
+	
+	/// <summary>
+	/// Deletes all guests
+	/// </summary>
+	public void DeleteGuests()
+	{
+		foreach(GameObject guestObject in GameObject.FindGameObjectsWithTag("Guest"))
+		{
+			Destroy(guestObject);
+		}
+	}
+
+	/// <summary>
+	/// Forces guests to leave
+	/// </summary>
+	public void ForceGuestsLeave()
+	{
+		foreach (GameObject guestObject in GameObject.FindGameObjectsWithTag("Guest"))
+		{
+			Guest guest = guestObject.GetComponent<Guest>();
+			guest.ForceLeave();
+		}
+	}
 
 	public void SpawnGuest()
 	{
