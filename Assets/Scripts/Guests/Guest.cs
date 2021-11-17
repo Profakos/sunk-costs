@@ -177,7 +177,7 @@ public class Guest : MonoBehaviour
 	private List<Vector2> FindPossibleTilesToMoveTo()
 	{
 		Vector2 currentOffset = FindCurrentOffset();
-		List<Vector2> possibleOffsets = new List<Vector2>(currentRoom.GetGraph()[currentOffset]);
+		List<Vector2> possibleOffsets = new List<Vector2>(currentRoom.roomShape.GetGraph()[currentOffset]);
 
 		return possibleOffsets;
 	}
