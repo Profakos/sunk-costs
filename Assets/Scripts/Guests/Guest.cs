@@ -273,19 +273,16 @@ public class Guest : MonoBehaviour
 		int randomRoomIndex = Random.Range(0, visitableRooms.Count);
 		roomToVisit = visitableRooms[randomRoomIndex];
 		
-		if (roomToVisit != null)
-		{
-			sprite.sortingLayerID = SortingLayer.NameToID("GuestInRoom");
+		sprite.sortingLayerID = SortingLayer.NameToID("GuestInRoom");
 
-			transform.position = roomToVisit.DoorPosition();
+		transform.position = roomToVisit.DoorPosition();
 
-			currentActivity = GuestActivity.Enjoying;
-			enjoyTimeLeft = enjoyTimePerRoom;
+		currentActivity = GuestActivity.Enjoying;
+		enjoyTimeLeft = enjoyTimePerRoom;
 
-			ChangeRoom(roomToVisit);
+		ChangeRoom(roomToVisit);
 
-			numOfRoomsToVisit -= 1;
-		}
+		numOfRoomsToVisit -= 1;
 		
 	}
 
