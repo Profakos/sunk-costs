@@ -9,12 +9,13 @@ public class HotelRoom : MonoBehaviour
 	public HotelSizeData hotelSizeData;
 
 	[SerializeField]
-	private int capacity;
-	[SerializeField]
 	private int guestAmount;
 	public Vector2 doorOffset;
+	 
+	[SerializeField]
+	private int guestCapacity = 0;
 
-	public int Capacity { get => capacity; } 
+	public int Capacity { get => guestCapacity; set { guestCapacity = value; } } 
 	public bool AtCapacity => guestAmount >= Capacity;
 
 	public SpriteRenderer spriteRenderer;
@@ -73,6 +74,7 @@ public class HotelRoom : MonoBehaviour
 		{
 			Flooded = true;
 			spriteRenderer.color = Color.yellow;
+			Capacity = 0;
 		}
 		
 		if(floodedTiles == roomShape.OffsetFromRoomCenter.Length)

@@ -14,6 +14,9 @@ public class GuestManager : MonoBehaviour
 	private Transform guestEntrance;
 	private Transform guestExit;
 
+	public float spawnDelay = 6f;
+	public float timeUntilNextGuestWave = 0f;
+
 	void Awake()
 	{
 		mapManager = gameObject.GetComponent<MapManager>();
@@ -28,13 +31,17 @@ public class GuestManager : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		SpawnGuest();
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		
+		timeUntilNextGuestWave -= Time.deltaTime;
+		if(timeUntilNextGuestWave <= 0f)
+		{
+			StartCoroutine(SpawnGuests());
+			timeUntilNextGuestWave = spawnDelay;
+		}
 	}
 	
 	/// <summary>
@@ -60,15 +67,27 @@ public class GuestManager : MonoBehaviour
 		}
 	}
 
-	public void SpawnGuest()
+	/// <summary>
+	/// Coroutine that handles the spawning of guests
+	/// </summary>
+	/// <returns></returns>
+	public IEnumerator SpawnGuests()
 	{
-		GameObject guestComponent = Instantiate(guestPrefab, guestSpawner.position, Quaternion.identity);
-		Guest guest = guestComponent.GetComponent<Guest>();
+		int guestNum = Random.Range(1, 3);
 
-		guest.DespawnPoint = guestDespawner.position;
-		guest.EntrancePoint = guestEntrance.position;
-		guest.ExitPoint = guestExit.position;
+		for(int i = 0; i < guestNum; i++)
+		{
+			GameObject guestComponent = Instantiate(guestPrefab, guestSpawner.position, Quaternion.identity);
+			Guest guest = guestComponent.GetComponent<Guest>();
 
-		guest.MapManager = mapManager;
+			guest.DespawnPoint = guestDespawner.position;
+			guest.EntrancePoint = guestEntrance.position;
+			guest.ExitPoint = guestExit.position;
+
+			guest.MapManager = mapManager;
+			 
+			yield return new WaitForSeconds(.2f);
+		}
+		 
 	}
 }

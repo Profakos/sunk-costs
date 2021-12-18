@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 public class HotelManager : MonoBehaviour
 {
 	public HotelSizeData hotelSizeData;
+	public HotelStateData hotelStateData;
 
 	private HotelSinkingTimer hotelSinkingTimer = new HotelSinkingTimer();
 	private GuestManager guestManager;
@@ -65,7 +66,7 @@ public class HotelManager : MonoBehaviour
 	/// </summary>
 	public void DebugSpawnGuest()
 	{
-		guestManager.SpawnGuest();
+		StartCoroutine(guestManager.SpawnGuests());
 	}
 
 	/// <summary>
@@ -97,7 +98,7 @@ public class HotelManager : MonoBehaviour
 	/// </summary>
 	private void AdvanceSinkTimer()
 	{
-		if (hotelSinkingTimer.CheckTimer(mapManager.TotalSpawnedFloors, timerImage))
+		if (hotelSinkingTimer.CheckTimer(hotelStateData.TotalSpawnedFloors, timerImage))
 		{
 			mapManager.SinkHotel();
 		};
@@ -111,12 +112,12 @@ public class HotelManager : MonoBehaviour
 	{
 		mapManager.NewFloor();
 
-		if (!hotelSinkingTimer.TimerActive && hotelSizeData.CurrentHotelHeight > 1)
+		if (!hotelSinkingTimer.TimerActive && hotelStateData.CurrentHotelHeight > 1)
 		{
 			hotelSinkingTimer.TimerActive = true;
 		}
 
-		hotelSinkingTimer.CalculateSinkTimerTarget(mapManager.TotalSpawnedFloors);
+		hotelSinkingTimer.CalculateSinkTimerTarget(hotelStateData.TotalSpawnedFloors);
 	}
 
 	/// <summary>

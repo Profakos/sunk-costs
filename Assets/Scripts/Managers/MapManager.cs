@@ -5,6 +5,7 @@ using UnityEngine;
 public class MapManager : MonoBehaviour
 {
 	public HotelSizeData hotelSizeData;
+	public HotelStateData hotelStateData;
 
 	public RoomPreview preview;
 	public int selectedRoomIndex = 0;
@@ -16,15 +17,14 @@ public class MapManager : MonoBehaviour
 	public List<Vector2> usedCoordinates = new List<Vector2>();
 
 	public Vector3 worldToHotelOffset;
-
-	public int TotalSpawnedFloors { get; set; } = 0;
-
+	  
 	void Awake()
 	{
 		worldToHotelOffset = new Vector3(hotelSizeData.MinX, hotelSizeData.MinY, 0);
 		
 		preview = GameObject.Find("RoomPreview").gameObject.GetComponent<RoomPreview>();
-		hotelSizeData.CurrentHotelHeight = hotelSizeData.InitialHotelHeight;
+		hotelStateData.CurrentHotelHeight = hotelStateData.InitialHotelHeight;
+		hotelStateData.TotalSpawnedFloors = (int)hotelStateData.InitialHotelHeight;
 		NewFloor();
 	}
 
@@ -82,7 +82,7 @@ public class MapManager : MonoBehaviour
 				return;
 			}
 
-			if (coordinateToCheck.y >= hotelSizeData.CurrentHotelHeight)
+			if (coordinateToCheck.y >= hotelStateData.CurrentHotelHeight)
 			{
 				Debug.Log("Too high");
 				return;
@@ -121,14 +121,14 @@ public class MapManager : MonoBehaviour
 	{
 		if (hotelSizeData != null)
 		{
-			if (hotelSizeData.MinY + hotelSizeData.CurrentHotelHeight + 1 > hotelSizeData.MaxY) return;
+			if (hotelSizeData.MinY + hotelStateData.CurrentHotelHeight + 1 > hotelSizeData.MaxY) return;
 
-			hotelSizeData.CurrentHotelHeight++;
-			TotalSpawnedFloors++;
+			hotelStateData.CurrentHotelHeight++;
+			hotelStateData.TotalSpawnedFloors++;
 
 			if (backRoomPrefab != null)
 			{
-				Vector3 newBackRoomPos = new Vector3(backRoomPrefab.transform.position.x, hotelSizeData.MinY + hotelSizeData.CurrentHotelHeight - 1, 0);
+				Vector3 newBackRoomPos = new Vector3(backRoomPrefab.transform.position.x, hotelSizeData.MinY + hotelStateData.CurrentHotelHeight - 1, 0);
 
 				GameObject newBackRoom = Instantiate(backRoomPrefab, newBackRoomPos, backRoomPrefab.transform.rotation);
 
@@ -179,7 +179,8 @@ public class MapManager : MonoBehaviour
 			}
 		}
 
-		hotelSizeData.CurrentHotelHeight -= 1;
+		if(hotelStateData.CurrentHotelHeight > 0)
+			hotelStateData.CurrentHotelHeight -= 1;
 
 	}
 
