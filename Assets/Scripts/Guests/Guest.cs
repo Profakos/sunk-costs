@@ -26,6 +26,8 @@ public class Guest : MonoBehaviour
 	private float enjoyTimeLeft = 0f;
 	private int numOfRoomsToVisit = 2;
 
+	private float moneyPerSecond = 1f;
+
 	private float currentPathfindCooldown = 0f;
 	private const float pathfindCooldown = 0.5f;
 
@@ -119,7 +121,9 @@ public class Guest : MonoBehaviour
 				}
 				else
 				{
-					if(!moving)
+					MapManager.hotelStateData.Money += moneyPerSecond * Time.deltaTime;
+
+					if (!moving)
 					{
 						if(currentPathfindCooldown <= 0)
 						{ 

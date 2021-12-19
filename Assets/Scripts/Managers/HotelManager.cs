@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -14,6 +15,7 @@ public class HotelManager : MonoBehaviour
 	private GameObject debugButtonGroup;
 
 	private UnityEngine.UI.Image timerImage;
+	private TextMeshProUGUI moneyDisplay;
 	
 	void Awake()
 	{
@@ -21,9 +23,18 @@ public class HotelManager : MonoBehaviour
 		debugButtonGroup.SetActive(false);
 
 		timerImage = GameObject.Find("TimerImage").gameObject.GetComponent<UnityEngine.UI.Image>();
-
+		moneyDisplay = GameObject.Find("MoneyDisplay").gameObject.GetComponent<TextMeshProUGUI>();
+		
 		guestManager = gameObject.GetComponent<GuestManager>();
 		mapManager = gameObject.GetComponent<MapManager>();
+
+		hotelStateData.moneyChangeHandler += UpdateMoneyDisplay;
+		UpdateMoneyDisplay();
+	}
+
+	void OnDestroy()
+	{
+		hotelStateData.moneyChangeHandler -= UpdateMoneyDisplay;
 	}
 
 	// Start is called before the first frame update
@@ -118,6 +129,14 @@ public class HotelManager : MonoBehaviour
 		}
 
 		hotelSinkingTimer.CalculateSinkTimerTarget(hotelStateData.TotalSpawnedFloors);
+	}
+
+	/// <summary>
+	/// Updates the money display
+	/// </summary>
+	private void UpdateMoneyDisplay()
+	{
+		moneyDisplay.text = "$" + (int)hotelStateData.Money;
 	}
 
 	/// <summary>
