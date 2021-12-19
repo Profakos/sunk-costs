@@ -11,7 +11,8 @@ public class HotelRoom : MonoBehaviour
 	[SerializeField]
 	private int guestAmount;
 	public Vector2 doorOffset;
-	 
+	private float pricePerSecond = 1f;
+
 	[SerializeField]
 	private int guestCapacity = 0;
 
@@ -23,9 +24,11 @@ public class HotelRoom : MonoBehaviour
 	public bool Sunk { get; set; }
 	public bool Flooded { get; set; }
 	public int GuestAmount { get => guestAmount; set => guestAmount = value; }
+	public float PricePerSecond { get => pricePerSecond; set => pricePerSecond = value; }
 
 	public delegate void SinkingDelegate(bool floodedOrSunk);
 	public event SinkingDelegate sinkingHandler;
+
 
 	void Awake()
 	{

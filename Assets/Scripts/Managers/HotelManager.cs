@@ -28,6 +28,7 @@ public class HotelManager : MonoBehaviour
 		guestManager = gameObject.GetComponent<GuestManager>();
 		mapManager = gameObject.GetComponent<MapManager>();
 
+		hotelStateData.Money = 2000;
 		hotelStateData.moneyChangeHandler += UpdateMoneyDisplay;
 		UpdateMoneyDisplay();
 	}

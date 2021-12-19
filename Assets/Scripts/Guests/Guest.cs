@@ -25,8 +25,7 @@ public class Guest : MonoBehaviour
 	private float enjoyTimePerRoom = 10f;
 	private float enjoyTimeLeft = 0f;
 	private int numOfRoomsToVisit = 2;
-
-	private float moneyPerSecond = 1f;
+	private float vacationBudget = 10f;
 
 	private float currentPathfindCooldown = 0f;
 	private const float pathfindCooldown = 0.5f;
@@ -92,7 +91,7 @@ public class Guest : MonoBehaviour
 				}
 				break;
 			case GuestActivity.Enjoying:
-				if (enjoyTimeLeft <= 0)
+				if (enjoyTimeLeft <= 0 || vacationBudget <= 0)
 				{
 					if(moving)
 					{
@@ -105,7 +104,7 @@ public class Guest : MonoBehaviour
 					else if (IsAtRoomDoor())
 					{
 						shortestPath = null;
-						if (numOfRoomsToVisit > 0)
+						if (numOfRoomsToVisit > 0 && vacationBudget > 0)
 						{
 							TryFindRoom();
 						}
@@ -121,7 +120,12 @@ public class Guest : MonoBehaviour
 				}
 				else
 				{
-					MapManager.hotelStateData.Money += moneyPerSecond * Time.deltaTime;
+					float priceToPay = currentRoom.PricePerSecond * Time.deltaTime;
+
+					if (vacationBudget < priceToPay) priceToPay = vacationBudget;
+
+					vacationBudget -= priceToPay;
+					MapManager.hotelStateData.Money += priceToPay;
 
 					if (!moving)
 					{

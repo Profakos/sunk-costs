@@ -19,6 +19,6 @@ public class HotelStateData : ScriptableObject
 	public float InitialHotelHeight { get => initialHotelHeight; }
 	public int TotalSpawnedFloors { get; set; }
 
-	public float Money { get => money; set { money = value; moneyChangeHandler.Invoke(); } } 
+	public float Money { get => money; set { money = value; if(moneyChangeHandler != null)moneyChangeHandler.Invoke(); } } 
 	
 }
