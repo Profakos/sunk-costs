@@ -18,7 +18,7 @@ public class MapManager : MonoBehaviour
 
 	public Vector3 worldToHotelOffset;
 	
-	private float floorPurchasePrice = 25f;
+	private float floorPurchasePrice = 15f;
 	private string floorLabel = "New Floor";
 
 	public float FloorPurchasePrice { get => floorPurchasePrice; set => floorPurchasePrice = value; }
@@ -60,6 +60,12 @@ public class MapManager : MonoBehaviour
 
 		if (!hotelRoom)
 			return;
+
+		if (hotelStateData.Money < hotelRoom.PurchasePrice)
+		{
+			Debug.Log("Not enough money");
+			return;
+		}
 
 		RoomShapeData roomShapeData = hotelRoom.roomShape;
 
@@ -114,6 +120,8 @@ public class MapManager : MonoBehaviour
 
 		hotelRooms.Add(newRoom);
 
+		hotelStateData.Money -= hotelRoom.PurchasePrice;
+
 		foreach (var coordinate in coordinatesToAdd)
 		{
 			usedCoordinates.Add(coordinate);
@@ -142,15 +150,21 @@ public class MapManager : MonoBehaviour
 			hotelStateData.CurrentHotelHeight++;
 			hotelStateData.TotalSpawnedFloors++;
 
+			if (hotelStateData.Money < FloorPurchasePrice)
+			{
+				Debug.Log("Not enough money");
+				return;
+			}
+
 			if (backRoomPrefab != null)
 			{
 				Vector3 newBackRoomPos = new Vector3(backRoomPrefab.transform.position.x, hotelSizeData.MinY + hotelStateData.CurrentHotelHeight - 1, 0);
 
 				GameObject newBackRoom = Instantiate(backRoomPrefab, newBackRoomPos, backRoomPrefab.transform.rotation);
 
+				hotelStateData.Money -= FloorPurchasePrice;
 				hotelBackRooms.Add(newBackRoom);
 			}
-			
 		}
 	}
 

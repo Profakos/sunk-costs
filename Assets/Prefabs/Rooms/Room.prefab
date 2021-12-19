@@ -102,6 +102,6 @@ MonoBehaviour:
   guestAmount: 0
   doorOffset: {x: 0, y: 0}
   guestCapacity: 1
-  purchasePrice: 10
+  purchasePrice: 5
   roomLabel: Room
   spriteRenderer: {fileID: 0}
