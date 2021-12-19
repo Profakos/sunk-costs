@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class HotelManager : MonoBehaviour
 {
@@ -13,24 +14,40 @@ public class HotelManager : MonoBehaviour
 	private GuestManager guestManager;
 	private MapManager mapManager;
 	private GameObject debugButtonGroup;
+	private GameObject gameplayButtonGroup;
 
-	private UnityEngine.UI.Image timerImage;
+	private Image timerImage;
 	private TextMeshProUGUI moneyDisplay;
 	
 	void Awake()
 	{
-		debugButtonGroup = GameObject.Find("DebugButtonGroup").gameObject;
+		debugButtonGroup = GameObject.Find("DebugButtonGroup");
 		debugButtonGroup.SetActive(false);
 
-		timerImage = GameObject.Find("TimerImage").gameObject.GetComponent<UnityEngine.UI.Image>();
-		moneyDisplay = GameObject.Find("MoneyDisplay").gameObject.GetComponent<TextMeshProUGUI>();
+		timerImage = GameObject.Find("TimerImage").GetComponent<UnityEngine.UI.Image>();
+		moneyDisplay = GameObject.Find("MoneyDisplay").GetComponent<TextMeshProUGUI>();
 		
 		guestManager = gameObject.GetComponent<GuestManager>();
 		mapManager = gameObject.GetComponent<MapManager>();
 
-		hotelStateData.Money = 2000;
+		hotelStateData.Money = 500;
 		hotelStateData.moneyChangeHandler += UpdateMoneyDisplay;
 		UpdateMoneyDisplay();
+
+		gameplayButtonGroup = GameObject.Find("GameplayButtonGroup");
+
+		Button[] buttons = gameplayButtonGroup.GetComponentsInChildren<Button>(true); 
+		List<GameObject> roomObjects = mapManager.roomTypes;
+		 
+		for(int buttonIndex = 0, roomIndex = 0; buttonIndex < buttons.Length && roomIndex < roomObjects.Count; buttonIndex++, roomIndex++)
+		{
+			TextMeshProUGUI buttonText = buttons[buttonIndex].GetComponentInChildren<TextMeshProUGUI>();
+			HotelRoom room = roomObjects[roomIndex].GetComponent<HotelRoom>();
+			buttonText.SetText(room.GetPurchaseLabel());
+		}
+
+		TextMeshProUGUI newFloorButton = GameObject.Find("SelectFloor").GetComponentInChildren<TextMeshProUGUI>();
+		newFloorButton.SetText(mapManager.GetNewFloorPurchaseLabel());
 	}
 
 	void OnDestroy()
@@ -137,7 +154,7 @@ public class HotelManager : MonoBehaviour
 	/// </summary>
 	private void UpdateMoneyDisplay()
 	{
-		moneyDisplay.text = "$" + (int)hotelStateData.Money;
+		moneyDisplay.SetText("$" + (int)hotelStateData.Money);
 	}
 
 	/// <summary>

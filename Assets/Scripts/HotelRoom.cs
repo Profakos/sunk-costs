@@ -16,6 +16,11 @@ public class HotelRoom : MonoBehaviour
 	[SerializeField]
 	private int guestCapacity = 0;
 
+	[SerializeField]
+	private float purchasePrice = 0;
+	[SerializeField]
+	private string roomLabel = "Room";
+
 	public int Capacity { get => guestCapacity; set { guestCapacity = value; } } 
 	public bool AtCapacity => guestAmount >= Capacity;
 
@@ -25,6 +30,8 @@ public class HotelRoom : MonoBehaviour
 	public bool Flooded { get; set; }
 	public int GuestAmount { get => guestAmount; set => guestAmount = value; }
 	public float PricePerSecond { get => pricePerSecond; set => pricePerSecond = value; }
+	public float PurchasePrice { get => purchasePrice; set => purchasePrice = value; }
+	public string RoomLabel { get => roomLabel; set => roomLabel = value; }
 
 	public delegate void SinkingDelegate(bool floodedOrSunk);
 	public event SinkingDelegate sinkingHandler;
@@ -114,6 +121,15 @@ public class HotelRoom : MonoBehaviour
 		{
 			return Comparer<float>.Default.Compare(pd[x].dist, pd[y].dist);
 		}
+	}
+
+	/// <summary>
+	/// Formats the price of the room for the label
+	/// </summary>
+	/// <returns></returns>
+	public string GetPurchaseLabel()
+	{
+		return RoomLabel + ", $" + PurchasePrice;
 	}
 	
 	/// <summary>

@@ -17,7 +17,14 @@ public class MapManager : MonoBehaviour
 	public List<Vector2> usedCoordinates = new List<Vector2>();
 
 	public Vector3 worldToHotelOffset;
-	  
+	
+	private float floorPurchasePrice = 25f;
+	private string floorLabel = "New Floor";
+
+	public float FloorPurchasePrice { get => floorPurchasePrice; set => floorPurchasePrice = value; }
+	public string FloorLabel { get => floorLabel; set => floorLabel = value; }
+
+
 	void Awake()
 	{
 		worldToHotelOffset = new Vector3(hotelSizeData.MinX, hotelSizeData.MinY, 0);
@@ -112,6 +119,15 @@ public class MapManager : MonoBehaviour
 			usedCoordinates.Add(coordinate);
 		}
 
+	}
+
+	/// <summary>
+	/// Formats the price of the new floor for the label
+	/// </summary>
+	/// <returns></returns>
+	public string GetNewFloorPurchaseLabel()
+	{
+		return FloorLabel + ", $" + FloorPurchasePrice;
 	}
 
 	/// <summary>
