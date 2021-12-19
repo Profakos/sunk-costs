@@ -17,3 +17,4 @@ MonoBehaviour:
   purchasePrice: 20
   roomLabel: Pool
   doorOffset: {x: 1, y: 0}
+  needTypesSatisfied: 03000000

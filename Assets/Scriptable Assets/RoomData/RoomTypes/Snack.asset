@@ -17,3 +17,4 @@ MonoBehaviour:
   purchasePrice: 10
   roomLabel: Snack
   doorOffset: {x: 0, y: 0}
+  needTypesSatisfied: 01000000

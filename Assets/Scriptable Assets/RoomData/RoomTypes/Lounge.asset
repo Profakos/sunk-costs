@@ -17,3 +17,4 @@ MonoBehaviour:
   purchasePrice: 20
   roomLabel: Lounge
   doorOffset: {x: 0, y: 0}
+  needTypesSatisfied: 02000000

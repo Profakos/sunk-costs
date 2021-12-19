@@ -17,3 +17,4 @@ MonoBehaviour:
   purchasePrice: 5
   roomLabel: Room
   doorOffset: {x: 0, y: 0}
+  needTypesSatisfied: 00000000

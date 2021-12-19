@@ -16,6 +16,9 @@ public class RoomType : ScriptableObject
 	[SerializeField]
 	private Vector2 doorOffset;
 
+	[SerializeField]
+	private NeedType[] needTypesSatisfied;
+
 	public int GuestCapacity { get => guestCapacity; set => guestCapacity = value; }
 	public float PricePerSecond { get => pricePerSecond; set => pricePerSecond = value; }
 	public float PurchasePrice { get => purchasePrice; set => purchasePrice = value; }
