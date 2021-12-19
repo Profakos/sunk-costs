@@ -99,9 +99,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomShape: {fileID: 11400000, guid: 8f1a693ef4d859344a30fb38c9ad4a7d, type: 2}
   hotelSizeData: {fileID: 11400000, guid: 202af44923a31e84594facd34e87a6b1, type: 2}
+  roomType: {fileID: 11400000, guid: 142484b7e0078484b9fa85f5ea8b6e29, type: 2}
   guestAmount: 0
-  doorOffset: {x: 0, y: 0}
-  guestCapacity: 1
-  purchasePrice: 5
-  roomLabel: Room
   spriteRenderer: {fileID: 0}

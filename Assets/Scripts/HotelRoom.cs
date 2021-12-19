@@ -8,20 +8,12 @@ public class HotelRoom : MonoBehaviour
 	public RoomShapeData roomShape;
 	public HotelSizeData hotelSizeData;
 
+	public RoomType roomType;
+
 	[SerializeField]
 	private int guestAmount;
-	public Vector2 doorOffset;
-	private float pricePerSecond = 1f;
-
-	[SerializeField]
-	private int guestCapacity = 0;
-
-	[SerializeField]
-	private float purchasePrice = 0;
-	[SerializeField]
-	private string roomLabel = "Room";
-
-	public int Capacity { get => guestCapacity; set { guestCapacity = value; } } 
+	
+	public int Capacity { get => roomType.GuestCapacity; set { roomType.GuestCapacity = value; } } 
 	public bool AtCapacity => guestAmount >= Capacity;
 
 	public SpriteRenderer spriteRenderer;
@@ -29,9 +21,10 @@ public class HotelRoom : MonoBehaviour
 	public bool Sunk { get; set; }
 	public bool Flooded { get; set; }
 	public int GuestAmount { get => guestAmount; set => guestAmount = value; }
-	public float PricePerSecond { get => pricePerSecond; set => pricePerSecond = value; }
-	public float PurchasePrice { get => purchasePrice; set => purchasePrice = value; }
-	public string RoomLabel { get => roomLabel; set => roomLabel = value; }
+	public float PricePerSecond { get => roomType.PricePerSecond; set => roomType.PricePerSecond = value; }
+	public float PurchasePrice { get => roomType.PurchasePrice; set => roomType.PurchasePrice = value; }
+	public string RoomLabel { get => roomType.RoomLabel; set => roomType.RoomLabel = value; }
+	public Vector2 DoorOffset { get; }
 
 	public delegate void SinkingDelegate(bool floodedOrSunk);
 	public event SinkingDelegate sinkingHandler;
@@ -60,7 +53,7 @@ public class HotelRoom : MonoBehaviour
 	/// <returns></returns>
 	public Vector2 DoorPosition()
 	{
-		return (Vector2)gameObject.transform.position + doorOffset;
+		return (Vector2)gameObject.transform.position + DoorOffset;
 	}
 	
 	/// <summary>

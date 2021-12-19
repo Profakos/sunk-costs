@@ -69,6 +69,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
         type: 3}
+      propertyPath: roomType
+      value: 
+      objectReference: {fileID: 11400000, guid: 8d2331217f2feba49a48aa3743043136,
+        type: 2}
+    - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
+        type: 3}
       propertyPath: roomLabel
       value: Pool
       objectReference: {fileID: 0}

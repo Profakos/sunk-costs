@@ -18,11 +18,8 @@ public class MapManager : MonoBehaviour
 
 	public Vector3 worldToHotelOffset;
 	
-	private float floorPurchasePrice = 15f;
-	private string floorLabel = "New Floor";
-
-	public float FloorPurchasePrice { get => floorPurchasePrice; set => floorPurchasePrice = value; }
-	public string FloorLabel { get => floorLabel; set => floorLabel = value; }
+	public float FloorPurchasePrice { get => hotelStateData.FloorPurchasePrice; set => hotelStateData.FloorPurchasePrice = value; }
+	public string FloorLabel { get => hotelStateData.FloorLabel; set => hotelStateData.FloorLabel = value; }
 
 
 	void Awake()

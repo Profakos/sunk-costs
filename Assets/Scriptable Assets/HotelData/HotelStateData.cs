@@ -15,10 +15,17 @@ public class HotelStateData : ScriptableObject
 	public delegate void MoneyChangeDelegate();
 	public event MoneyChangeDelegate moneyChangeHandler;
 
+	[SerializeField]
+	private float floorPurchasePrice = 15f;
+	[SerializeField]
+	private string floorLabel = "New Floor";
+
 	public float CurrentHotelHeight { get => currentHotelHeight; set => currentHotelHeight = value; }
 	public float InitialHotelHeight { get => initialHotelHeight; }
 	public int TotalSpawnedFloors { get; set; }
 
-	public float Money { get => money; set { money = value; if(moneyChangeHandler != null)moneyChangeHandler.Invoke(); } } 
-	
+	public float Money { get => money; set { money = value; if(moneyChangeHandler != null)moneyChangeHandler.Invoke(); } }
+
+	public float FloorPurchasePrice { get => floorPurchasePrice; set => floorPurchasePrice = value; }
+	public string FloorLabel { get => floorLabel; set => floorLabel = value; }
 }

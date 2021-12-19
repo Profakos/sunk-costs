@@ -115,7 +115,7 @@ public class Guest : MonoBehaviour
 					}
 					else
 					{
-						PathAndMoveTowardsTile(currentRoom.doorOffset);
+						PathAndMoveTowardsTile(currentRoom.DoorOffset);
 					}
 				}
 				else
@@ -210,7 +210,7 @@ public class Guest : MonoBehaviour
 	{
 		if (currentRoom == null) return true;
 
-		return (Vector2) transform.position == (Vector2) currentRoom.transform.position + currentRoom.doorOffset;
+		return (Vector2) transform.position == (Vector2) currentRoom.transform.position + currentRoom.DoorOffset;
 	}
 
 	/// <summary>
