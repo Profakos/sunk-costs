@@ -25,7 +25,7 @@ public class Guest : MonoBehaviour
 	private float enjoyTimePerRoom = 10f;
 	private float enjoyTimeLeft = 0f;
 	private int numOfRoomsToVisit = 2;
-	private float vacationBudget = 10f;
+	private float vacationBudget = 20f;
 
 	private float currentPathfindCooldown = 0f;
 	private const float pathfindCooldown = 0.5f;
