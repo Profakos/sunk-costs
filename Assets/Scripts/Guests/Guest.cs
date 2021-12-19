@@ -239,9 +239,9 @@ public class Guest : MonoBehaviour
 		if(shortestPath == null)
 		{
 			Vector2 myOff = FindCurrentOffset();
-			Debug.Log("find path from "+myOff+" to "+targetOffset);
+			//Debug.Log("find path from "+myOff+" to "+targetOffset);
 			shortestPath = currentRoom.GetShortestPath(myOff, targetOffset);
-			Debug.Log("path = "+string.Join(",", shortestPath.ToArray()));
+			//Debug.Log("path = "+string.Join(",", shortestPath.ToArray()));
 		}
 		// needs to have at least 2 targets in it, otherwise reached the end
 		if(shortestPath.Count < 2)
