@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guestCapacity: 2
   pricePerSecond: 1
-  purchasePrice: 20
+  purchasePrice: 15
   roomLabel: Lounge
   doorOffset: {x: 0, y: 0}
   needTypesSatisfied: 02000000

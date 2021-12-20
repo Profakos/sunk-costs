@@ -13,6 +13,8 @@ public class HotelRoom : MonoBehaviour
 	[SerializeField]
 	private int guestAmount;
 
+	private float needFulfillingRate = 1f;
+
 	public int currentCapacity;
 	
 	public int Capacity { get => currentCapacity; set { currentCapacity = value; } } 
@@ -25,6 +27,7 @@ public class HotelRoom : MonoBehaviour
 	public int GuestAmount { get => guestAmount; set => guestAmount = value; }
 
 	public Vector2 DoorOffset { get => roomType.DoorOffset; }
+	public float NeedFulfillingRate { get => needFulfillingRate; set => needFulfillingRate = value; }
 
 	public delegate void SinkingDelegate(bool floodedOrSunk);
 	public event SinkingDelegate sinkingHandler;

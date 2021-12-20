@@ -101,7 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentActivity: 0
   target: {x: 0, y: 0}
-  needs: 
+  durationPerNeed: 10
 --- !u!50 &-7038338113402846368
 Rigidbody2D:
   serializedVersion: 4

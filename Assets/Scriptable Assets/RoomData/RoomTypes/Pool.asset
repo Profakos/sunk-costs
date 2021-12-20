@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guestCapacity: 3
   pricePerSecond: 1
-  purchasePrice: 20
+  purchasePrice: 15
   roomLabel: Pool
   doorOffset: {x: 1, y: 0}
   needTypesSatisfied: 03000000

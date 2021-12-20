@@ -24,15 +24,14 @@ public class Guest : MonoBehaviour
 	private Vector2 target;
 	private int speed = 2;
 	private bool moving = true;
-
-	private float enjoyTimePerRoom = 10f;
-	private float enjoyTimeLeft = 0f;
+	
+	private float durationPerNeed = 10f;
 
 	[SerializeField]
-	private List<NeedType> needs = new List<NeedType>();
+	private Dictionary<NeedType, float> needs = new Dictionary<NeedType, float>();
 
 	private float vacationTime = 30f;
-	private float vacationBudget = 20f;
+	private float vacationBudget = 30f;
 
 	private float currentPathfindCooldown = 0f;
 	private const float pathfindCooldown = 0.5f;
@@ -104,9 +103,8 @@ public class Guest : MonoBehaviour
 				}
 				break;
 			case GuestActivity.Enjoying:
-				if (enjoyTimeLeft <= 0 || vacationBudget <= 0 || vacationTime <= 0)
+				if (!currentRoom.roomType.NeedTypesSatisfied.Intersect(needs.Keys).Any() || vacationBudget <= 0 || vacationTime <= 0)
 				{
-					needs.RemoveAll(n => currentRoom.roomType.NeedTypesSatisfied.Contains(n));
 
 					if (moving)
 					{
@@ -141,6 +139,14 @@ public class Guest : MonoBehaviour
 
 					vacationBudget -= priceToPay;
 					MapManager.hotelStateData.Money += priceToPay;
+					
+					var needDecrease = Time.deltaTime * currentRoom.NeedFulfillingRate;
+
+					foreach (NeedType needBeingFulfilled in currentRoom.roomType.NeedTypesSatisfied.Intersect(needs.Keys))
+					{
+						needs[needBeingFulfilled] -= needDecrease;
+						if (needs[needBeingFulfilled] < 0) needs.Remove(needBeingFulfilled);
+					}
 
 					if (!moving)
 					{
@@ -166,8 +172,7 @@ public class Guest : MonoBehaviour
 							moving = false;
 						}
 					}
-
-					enjoyTimeLeft -= Time.deltaTime;
+					
 				}
 				break;
 			case GuestActivity.Leaving:
@@ -217,11 +222,9 @@ public class Guest : MonoBehaviour
 	/// </summary>
 	public void ForceLeave()
 	{
-		enjoyTimeLeft = 0f;
 		needs.Clear();
 		UpdateNeedsDisplay();
 		BeginLeaving();
-
 	}
 
 
@@ -283,11 +286,11 @@ public class Guest : MonoBehaviour
 	/// </summary>
 	private void SetupNeeds()
 	{
-		needs.Add(NeedType.Sleep);
+		needs.Add(NeedType.Sleep, durationPerNeed);
 
 		List<NeedType> possibleNeeds = System.Enum.GetValues(typeof(NeedType)).Cast<NeedType>().ToList();
 		possibleNeeds.Remove(NeedType.Sleep);
-		needs.Add(possibleNeeds[Random.Range(0, possibleNeeds.Count)]);
+		needs.Add(possibleNeeds[Random.Range(0, possibleNeeds.Count)], durationPerNeed);
 
 		UpdateNeedsDisplay();
 	}
@@ -307,7 +310,7 @@ public class Guest : MonoBehaviour
 		HotelRoom roomToVisit = null;
 
 		List<HotelRoom> visitableRooms = MapManager.hotelRooms.FindAll(r => !r.Flooded && !r.Sunk && r != currentRoom
-		&& !r.AtCapacity && needs.Intersect(r.roomType.NeedTypesSatisfied).Any());
+		&& !r.AtCapacity && needs.Keys.Intersect(r.roomType.NeedTypesSatisfied).Any());
 		
 		if (visitableRooms.Count == 0)
 		{
@@ -323,7 +326,6 @@ public class Guest : MonoBehaviour
 		transform.position = roomToVisit.DoorPosition();
 
 		currentActivity = GuestActivity.Enjoying;
-		enjoyTimeLeft = enjoyTimePerRoom;
 		
 		ChangeRoom(roomToVisit);
 		
@@ -424,7 +426,7 @@ public class Guest : MonoBehaviour
 	{
 		string needsDisplay = "";
 
-		foreach (var need in needs)
+		foreach (var need in needs.Keys)
 		{
 			needsDisplay += " <sprite name=\"" + need.ToString() + "\">";
 		}
