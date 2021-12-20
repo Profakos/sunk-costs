@@ -22,9 +22,12 @@ public class Guest : MonoBehaviour
 	private Vector2 target;
 	private int speed = 2;
 	private bool moving = true;
+
 	private float enjoyTimePerRoom = 10f;
 	private float enjoyTimeLeft = 0f;
 	private int numOfRoomsToVisit = 2;
+	private float vacationTime = 30f;
+
 	private float vacationBudget = 20f;
 
 	private float currentPathfindCooldown = 0f;
@@ -56,7 +59,7 @@ public class Guest : MonoBehaviour
 			Destroy(this.gameObject);
 			return;
 		}
-
+		
 		ChangeBehaviour();
 	}
 	
@@ -81,7 +84,7 @@ public class Guest : MonoBehaviour
 	private void ChangeBehaviour()
 	{
 		float distanceToTarget = (target - (Vector2)transform.position).magnitude;
-
+		
 		switch (currentActivity)
 		{
 			case GuestActivity.Arriving:
@@ -91,7 +94,7 @@ public class Guest : MonoBehaviour
 				}
 				break;
 			case GuestActivity.Enjoying:
-				if (enjoyTimeLeft <= 0 || vacationBudget <= 0)
+				if (enjoyTimeLeft <= 0 || vacationBudget <= 0 || vacationTime <= 0)
 				{
 					if(moving)
 					{
@@ -104,7 +107,7 @@ public class Guest : MonoBehaviour
 					else if (IsAtRoomDoor())
 					{
 						shortestPath = null;
-						if (numOfRoomsToVisit > 0 && vacationBudget > 0)
+						if (numOfRoomsToVisit > 0 && vacationBudget > 0 && vacationTime > 0)
 						{
 							TryFindRoom();
 						}
@@ -166,6 +169,13 @@ public class Guest : MonoBehaviour
 				TryFindRoom();
 
 				break;
+		}
+		
+		//ticks down once the hotel has been entered, even while waiting in the lobby
+		if (currentActivity != GuestActivity.Arriving)
+		{
+			vacationTime -= Time.deltaTime;
+
 		}
 	}
 
