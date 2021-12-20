@@ -12,8 +12,10 @@ public class HotelRoom : MonoBehaviour
 
 	[SerializeField]
 	private int guestAmount;
+
+	public int currentCapacity;
 	
-	public int Capacity { get => roomType.GuestCapacity; set { roomType.GuestCapacity = value; } } 
+	public int Capacity { get => currentCapacity; set { currentCapacity = value; } } 
 	public bool AtCapacity => guestAmount >= Capacity;
 
 	public SpriteRenderer spriteRenderer;
@@ -22,7 +24,7 @@ public class HotelRoom : MonoBehaviour
 	public bool Flooded { get; set; }
 	public int GuestAmount { get => guestAmount; set => guestAmount = value; }
 
-	public Vector2 DoorOffset { get; }
+	public Vector2 DoorOffset { get => roomType.DoorOffset; }
 
 	public delegate void SinkingDelegate(bool floodedOrSunk);
 	public event SinkingDelegate sinkingHandler;
@@ -36,7 +38,7 @@ public class HotelRoom : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		
+		currentCapacity = roomType.GuestCapacity;
 	}
 
 	// Update is called once per frame
@@ -120,7 +122,7 @@ public class HotelRoom : MonoBehaviour
 	/// <returns></returns>
 	public string GetPurchaseLabel()
 	{
-		String purchaseLabel = roomType.RoomLabel;
+		string purchaseLabel = roomType.RoomLabel;
 
 		foreach(var need in roomType.NeedTypesSatisfied)
 		{

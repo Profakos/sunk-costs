@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using TMPro;
 
 public class Guest : MonoBehaviour
 {
@@ -11,7 +13,7 @@ public class Guest : MonoBehaviour
 
 	private Rigidbody2D rigidBody;
 	private SpriteRenderer sprite;
-
+	private TextMeshPro needsDisplayText;
 
 	[SerializeField]
 	private GuestActivity currentActivity;
@@ -25,9 +27,11 @@ public class Guest : MonoBehaviour
 
 	private float enjoyTimePerRoom = 10f;
 	private float enjoyTimeLeft = 0f;
-	private int numOfRoomsToVisit = 2;
-	private float vacationTime = 30f;
 
+	[SerializeField]
+	private List<NeedType> needs = new List<NeedType>();
+
+	private float vacationTime = 30f;
 	private float vacationBudget = 20f;
 
 	private float currentPathfindCooldown = 0f;
@@ -40,13 +44,19 @@ public class Guest : MonoBehaviour
 	{
 		rigidBody = gameObject.GetComponent<Rigidbody2D>();
 		sprite = gameObject.GetComponent<SpriteRenderer>();
+		needsDisplayText = gameObject.GetComponentInChildren<TextMeshPro>();
+		needsDisplayText.SetText("");
+
 		currentActivity = GuestActivity.Arriving;
+		
 	}
 
 	// Start is called before the first frame update
 	void Start()
 	{
 		target = EntrancePoint;
+
+		SetupNeeds();
 
 	}
 	
@@ -96,7 +106,9 @@ public class Guest : MonoBehaviour
 			case GuestActivity.Enjoying:
 				if (enjoyTimeLeft <= 0 || vacationBudget <= 0 || vacationTime <= 0)
 				{
-					if(moving)
+					needs.RemoveAll(n => currentRoom.roomType.NeedTypesSatisfied.Contains(n));
+
+					if (moving)
 					{
 						if (distanceToTarget < minimumTargetDistance)
 						{
@@ -107,7 +119,7 @@ public class Guest : MonoBehaviour
 					else if (IsAtRoomDoor())
 					{
 						shortestPath = null;
-						if (numOfRoomsToVisit > 0 && vacationBudget > 0 && vacationTime > 0)
+						if (needs.Any() && vacationBudget > 0 && vacationTime > 0)
 						{
 							TryFindRoom();
 						}
@@ -206,7 +218,8 @@ public class Guest : MonoBehaviour
 	public void ForceLeave()
 	{
 		enjoyTimeLeft = 0f;
-		numOfRoomsToVisit = 0;
+		needs.Clear();
+		UpdateNeedsDisplay();
 		BeginLeaving();
 
 	}
@@ -266,6 +279,20 @@ public class Guest : MonoBehaviour
 	}
 
 	/// <summary>
+	/// The guest selects their desires
+	/// </summary>
+	private void SetupNeeds()
+	{
+		needs.Add(NeedType.Sleep);
+
+		List<NeedType> possibleNeeds = System.Enum.GetValues(typeof(NeedType)).Cast<NeedType>().ToList();
+		possibleNeeds.Remove(NeedType.Sleep);
+		needs.Add(possibleNeeds[Random.Range(0, possibleNeeds.Count)]);
+
+		UpdateNeedsDisplay();
+	}
+
+	/// <summary>
 	/// Tries to find a room to stay in, returns if it is successful
 	/// </summary>
 	private void TryFindRoom()
@@ -280,9 +307,9 @@ public class Guest : MonoBehaviour
 		HotelRoom roomToVisit = null;
 
 		List<HotelRoom> visitableRooms = MapManager.hotelRooms.FindAll(r => !r.Flooded && !r.Sunk && r != currentRoom
-		&& !r.AtCapacity);
-
-		if(visitableRooms.Count == 0)
+		&& !r.AtCapacity && needs.Intersect(r.roomType.NeedTypesSatisfied).Any());
+		
+		if (visitableRooms.Count == 0)
 		{
 			currentPathfindCooldown = pathfindCooldown;
 			return;
@@ -291,16 +318,14 @@ public class Guest : MonoBehaviour
 		int randomRoomIndex = Random.Range(0, visitableRooms.Count);
 		roomToVisit = visitableRooms[randomRoomIndex];
 		
-		sprite.sortingLayerID = SortingLayer.NameToID("GuestInRoom");
+		ChangeSortingLayer("GuestInRoom");
 
 		transform.position = roomToVisit.DoorPosition();
 
 		currentActivity = GuestActivity.Enjoying;
 		enjoyTimeLeft = enjoyTimePerRoom;
-
+		
 		ChangeRoom(roomToVisit);
-
-		numOfRoomsToVisit -= 1;
 		
 	}
 
@@ -312,6 +337,7 @@ public class Guest : MonoBehaviour
 	{
 		if (currentRoom != null)
 		{
+			UpdateNeedsDisplay();
 			currentRoom.GuestAmount--;
 			currentRoom.UnsubscribeSink(HandleSinking);
 		}
@@ -354,13 +380,22 @@ public class Guest : MonoBehaviour
 		{
 			ChangeRoom(null);
 			transform.position = ExitPoint;
-			sprite.sortingLayerID = SortingLayer.NameToID("GuestBehindHotel");
+
+			ChangeSortingLayer("GuestBehindHotel");
+
 		}
 
 		target = DespawnPoint;
 		currentActivity = GuestActivity.Leaving;
 		moving = true;
 	} 
+
+	private void ChangeSortingLayer(string layerName)
+	{
+		var sortingLayerId = SortingLayer.NameToID(layerName);
+		sprite.sortingLayerID = sortingLayerId;
+		needsDisplayText.sortingLayerID = sortingLayerId;
+	}
 
 	/// <summary>
 	/// Finishes arriving to the hotel
@@ -382,5 +417,18 @@ public class Guest : MonoBehaviour
 		rigidBody.MovePosition((Vector2)transform.position + dir * speed * Time.deltaTime);
 	}
 
+	/// <summary>
+	/// Updates the need display over the guest
+	/// </summary>
+	private void UpdateNeedsDisplay()
+	{
+		string needsDisplay = "";
 
+		foreach (var need in needs)
+		{
+			needsDisplay += " <sprite name=\"" + need.ToString() + "\">";
+		}
+
+		needsDisplayText.SetText(needsDisplay);
+	}
 }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb1a1063a0ca7544eb619611cbb06f64, type: 3}
   m_Name: Lounge
   m_EditorClassIdentifier: 
-  guestCapacity: 3
+  guestCapacity: 2
   pricePerSecond: 1
   purchasePrice: 20
   roomLabel: Lounge
