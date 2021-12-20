@@ -21,9 +21,7 @@ public class HotelRoom : MonoBehaviour
 	public bool Sunk { get; set; }
 	public bool Flooded { get; set; }
 	public int GuestAmount { get => guestAmount; set => guestAmount = value; }
-	public float PricePerSecond { get => roomType.PricePerSecond; set => roomType.PricePerSecond = value; }
-	public float PurchasePrice { get => roomType.PurchasePrice; set => roomType.PurchasePrice = value; }
-	public string RoomLabel { get => roomType.RoomLabel; set => roomType.RoomLabel = value; }
+
 	public Vector2 DoorOffset { get; }
 
 	public delegate void SinkingDelegate(bool floodedOrSunk);
@@ -122,7 +120,15 @@ public class HotelRoom : MonoBehaviour
 	/// <returns></returns>
 	public string GetPurchaseLabel()
 	{
-		return RoomLabel + ", $" + PurchasePrice;
+		String purchaseLabel = roomType.RoomLabel;
+
+		foreach(var need in roomType.NeedTypesSatisfied)
+		{
+			purchaseLabel += " <sprite name=\"" + need.ToString() + "\">";
+		}
+
+		purchaseLabel += ", $" + roomType.PurchasePrice;
+		return purchaseLabel;
 	}
 	
 	/// <summary>

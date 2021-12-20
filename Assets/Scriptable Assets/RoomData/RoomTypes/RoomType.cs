@@ -24,4 +24,5 @@ public class RoomType : ScriptableObject
 	public float PurchasePrice { get => purchasePrice; set => purchasePrice = value; }
 	public string RoomLabel { get => roomLabel; set => roomLabel = value; }
 	public Vector2 DoorOffset { get => doorOffset; set => doorOffset = value; }
+	public NeedType[] NeedTypesSatisfied { get => needTypesSatisfied; set => needTypesSatisfied = value; }
 }

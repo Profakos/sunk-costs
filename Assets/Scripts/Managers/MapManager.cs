@@ -58,7 +58,7 @@ public class MapManager : MonoBehaviour
 		if (!hotelRoom)
 			return;
 
-		if (hotelStateData.Money < hotelRoom.PurchasePrice)
+		if (hotelStateData.Money < hotelRoom.roomType.PurchasePrice)
 		{
 			Debug.Log("Not enough money");
 			return;
@@ -117,7 +117,7 @@ public class MapManager : MonoBehaviour
 
 		hotelRooms.Add(newRoom);
 
-		hotelStateData.Money -= hotelRoom.PurchasePrice;
+		hotelStateData.Money -= hotelRoom.roomType.PurchasePrice;
 
 		foreach (var coordinate in coordinatesToAdd)
 		{

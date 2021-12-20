@@ -4,9 +4,9 @@ using UnityEngine;
 
 public enum NeedType
 {
-	SLEEP,
-	FOOD,
-	SOCIAL,
-	SPORTS,
-	FUN
+	Sleep,
+	Food,
+	Social,
+	Sports,
+	Fun
 }
