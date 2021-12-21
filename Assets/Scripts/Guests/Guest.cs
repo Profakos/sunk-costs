@@ -6,6 +6,8 @@ using System.Linq;
 
 public class Guest : MonoBehaviour
 {
+	public HotelStateData hotelStateData;
+
 	public Vector2 EntrancePoint { get; set; }
 	public Vector2 ExitPoint { get; set; }
 	public Vector2 DespawnPoint { get; set; }
@@ -16,6 +18,8 @@ public class Guest : MonoBehaviour
 	public float CurrentPathfindCooldown { get => currentPathfindCooldown; set => currentPathfindCooldown = value; }
 
 	public static float PathfindCooldown => pathfindCooldown;
+
+	public static float WaitingBuffer => waitingBuffer;
 
 	private Rigidbody2D rigidBody;
 	private SpriteRenderer sprite;
@@ -38,8 +42,12 @@ public class Guest : MonoBehaviour
 
 	private float luxuryMultiplier = 1;
 
-	private float vacationTime = 30f;
-	private float vacationBudget = 30f;
+	[SerializeField]
+	private float vacationTime;
+	[SerializeField]
+	private float vacationBudget;
+
+	private const float waitingBuffer = 10f;
 
 	private float currentPathfindCooldown = 0f;
 	private const float pathfindCooldown = 0.5f;
@@ -62,18 +70,9 @@ public class Guest : MonoBehaviour
 	void Start()
 	{
 		target = EntrancePoint;
-
+		
 		SetupNeeds();
 
-		if(Random.Range(1, 100) < 10) // 10% chance of luxury
-		{
-			LuxuryMultiplier = 2f;
-
-			VacationBudget *= LuxuryMultiplier;
-			VacationTime *= LuxuryMultiplier;
-
-			sprite.color = new Color(0.38f, 0.32f, 0.52f);
-		}
 	}
 	
 	// Update is called once per frame
@@ -150,12 +149,12 @@ public class Guest : MonoBehaviour
 				}
 				else
 				{
-					float priceToPay = currentRoom.roomType.PricePerSecond * Time.deltaTime;
+					float priceToPay = hotelStateData.RoomRentPerSecond * Time.deltaTime;
 
 					if (VacationBudget < priceToPay) priceToPay = VacationBudget;
 
 					VacationBudget -= priceToPay;
-					MapManager.hotelStateData.Money += priceToPay;
+					hotelStateData.Money += priceToPay;
 					
 					var needDecrease = Time.deltaTime * currentRoom.NeedFulfillingRate;
 
@@ -336,13 +335,27 @@ public class Guest : MonoBehaviour
 	/// </summary>
 	private void SetupNeeds()
 	{
-		needs.Add(NeedType.Sleep, durationPerNeed);
+
+		if (Random.Range(1, 100) < 10) // 10% chance of luxury
+		{
+			LuxuryMultiplier = 2f;
+
+			sprite.color = new Color(0.38f, 0.32f, 0.52f);
+		}
+
+		needs.Add(NeedType.Sleep, durationPerNeed * LuxuryMultiplier);
 
 		List<NeedType> possibleNeeds = System.Enum.GetValues(typeof(NeedType)).Cast<NeedType>().ToList();
 		possibleNeeds.Remove(NeedType.Sleep);
-		needs.Add(possibleNeeds[Random.Range(0, possibleNeeds.Count)], durationPerNeed);
+		needs.Add(possibleNeeds[Random.Range(0, possibleNeeds.Count)], durationPerNeed * LuxuryMultiplier);
 
 		UpdateNeedsDisplay();
+
+		float totalNeed = needs.Values.Sum();
+
+		VacationBudget = hotelStateData.RoomRentPerSecond * totalNeed * LuxuryMultiplier;
+		VacationTime = totalNeed + WaitingBuffer;
+
 	}
 
 	/// <summary>

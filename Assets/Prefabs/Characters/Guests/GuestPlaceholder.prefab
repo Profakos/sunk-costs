@@ -99,9 +99,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d9075eed560bef4d84726f9cc382db8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hotelStateData: {fileID: 11400000, guid: 3ca961cb7df0c334e839b637abdbb4ec, type: 2}
   currentActivity: 0
   target: {x: 0, y: 0}
-  durationPerNeed: 10
 --- !u!50 &-7038338113402846368
 Rigidbody2D:
   serializedVersion: 4

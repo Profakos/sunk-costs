@@ -16,6 +16,9 @@ public class HotelStateData : ScriptableObject
 	public event MoneyChangeDelegate moneyChangeHandler;
 
 	[SerializeField]
+	private float roomRentPerSecond = 1f;
+
+	[SerializeField]
 	private float floorPurchasePrice = 15f;
 	[SerializeField]
 	private string floorLabel = "New Floor";
@@ -28,4 +31,5 @@ public class HotelStateData : ScriptableObject
 
 	public float FloorPurchasePrice { get => floorPurchasePrice; set => floorPurchasePrice = value; }
 	public string FloorLabel { get => floorLabel; set => floorLabel = value; }
+	public float RoomRentPerSecond { get => roomRentPerSecond; set => roomRentPerSecond = value; }
 }
