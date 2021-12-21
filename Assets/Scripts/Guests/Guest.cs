@@ -381,8 +381,18 @@ public class Guest : MonoBehaviour
 			return;
 		}
 
-		int randomRoomIndex = Random.Range(0, visitableRooms.Count);
-		roomToVisit = visitableRooms[randomRoomIndex];
+		List<HotelRoom> roomsMatchingLuxuryLevel = visitableRooms.FindAll(r => r.LuxuryMultiplier == LuxuryMultiplier);
+
+		if(roomsMatchingLuxuryLevel.Count > 0)
+		{
+			int randomRoomIndex = Random.Range(0, roomsMatchingLuxuryLevel.Count);
+			roomToVisit = roomsMatchingLuxuryLevel[randomRoomIndex];
+		}
+		else
+		{
+			int randomRoomIndex = Random.Range(0, visitableRooms.Count);
+			roomToVisit = visitableRooms[randomRoomIndex];
+		}
 		
 		ChangeSortingLayer("GuestInRoom");
 
