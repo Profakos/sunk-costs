@@ -103,7 +103,7 @@ public class Guest : MonoBehaviour
 				}
 				break;
 			case GuestActivity.Enjoying:
-				if (!currentRoom.roomType.NeedTypesSatisfied.Intersect(needs.Keys).Any() || vacationBudget <= 0 || vacationTime <= 0)
+				if (IsAllNeedsSatisfiedByRoom() || vacationBudget <= 0 || vacationTime <= 0)
 				{
 
 					if (moving)
@@ -142,8 +142,10 @@ public class Guest : MonoBehaviour
 					
 					var needDecrease = Time.deltaTime * currentRoom.NeedFulfillingRate;
 
-					foreach (NeedType needBeingFulfilled in currentRoom.roomType.NeedTypesSatisfied.Intersect(needs.Keys))
+					foreach (NeedType needBeingFulfilled in currentRoom.roomType.NeedTypesSatisfied)
 					{
+						if (!needs.ContainsKey(needBeingFulfilled)) continue;
+
 						needs[needBeingFulfilled] -= needDecrease;
 						if (needs[needBeingFulfilled] < 0) needs.Remove(needBeingFulfilled);
 					}
@@ -240,6 +242,37 @@ public class Guest : MonoBehaviour
 	}
 
 	/// <summary>
+	/// Checks if the room has satisfied every need it could
+	/// </summary>
+	/// <returns></returns>
+	private bool IsAllNeedsSatisfiedByRoom()
+	{
+		foreach(NeedType need in currentRoom.roomType.NeedTypesSatisfied)
+		{
+			if(needs.ContainsKey(need) && needs[need] > 0)
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/// <summary>
+	/// Checks if a collection of needs contains any that the guest has
+	/// </summary>
+	/// <returns></returns>
+	private bool IsAnyRelevantNeed(NeedType[] needToCheck)
+	{
+		foreach(NeedType need in needToCheck)
+		{
+			if (needs.ContainsKey(need)) return true;
+		}
+
+		return false;
+	}
+
+	/// <summary>
 	/// Moves around in the room, looking for a random neighbouring spot
 	/// </summary>
 	private void MoveToNeighbouringTile()
@@ -310,7 +343,7 @@ public class Guest : MonoBehaviour
 		HotelRoom roomToVisit = null;
 
 		List<HotelRoom> visitableRooms = MapManager.hotelRooms.FindAll(r => !r.Flooded && !r.Sunk && r != currentRoom
-		&& !r.AtCapacity && needs.Keys.Intersect(r.roomType.NeedTypesSatisfied).Any());
+		&& !r.AtCapacity && IsAnyRelevantNeed(r.roomType.NeedTypesSatisfied));
 		
 		if (visitableRooms.Count == 0)
 		{
