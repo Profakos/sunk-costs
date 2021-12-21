@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 using TMPro;
+using System.Linq;
 
 public class Guest : MonoBehaviour
 {
@@ -10,6 +10,12 @@ public class Guest : MonoBehaviour
 	public Vector2 ExitPoint { get; set; }
 	public Vector2 DespawnPoint { get; set; }
 	public MapManager MapManager { get; set; }
+	public float LuxuryMultiplier { get => luxuryMultiplier; set => luxuryMultiplier = value; }
+	public float VacationTime { get => vacationTime; set => vacationTime = value; }
+	public float VacationBudget { get => vacationBudget; set => vacationBudget = value; }
+	public float CurrentPathfindCooldown { get => currentPathfindCooldown; set => currentPathfindCooldown = value; }
+
+	public static float PathfindCooldown => pathfindCooldown;
 
 	private Rigidbody2D rigidBody;
 	private SpriteRenderer sprite;
@@ -29,6 +35,8 @@ public class Guest : MonoBehaviour
 
 	[SerializeField]
 	private Dictionary<NeedType, float> needs = new Dictionary<NeedType, float>();
+
+	private float luxuryMultiplier = 1;
 
 	private float vacationTime = 30f;
 	private float vacationBudget = 30f;
@@ -57,6 +65,15 @@ public class Guest : MonoBehaviour
 
 		SetupNeeds();
 
+		if(Random.Range(1, 100) < 10) // 10% chance of luxury
+		{
+			LuxuryMultiplier = 2f;
+
+			VacationBudget *= LuxuryMultiplier;
+			VacationTime *= LuxuryMultiplier;
+
+			sprite.color = new Color(0.38f, 0.32f, 0.52f);
+		}
 	}
 	
 	// Update is called once per frame
@@ -103,7 +120,7 @@ public class Guest : MonoBehaviour
 				}
 				break;
 			case GuestActivity.Enjoying:
-				if (IsAllNeedsSatisfiedByRoom() || vacationBudget <= 0 || vacationTime <= 0)
+				if (IsAllNeedsSatisfiedByRoom() || VacationBudget <= 0 || VacationTime <= 0)
 				{
 
 					if (moving)
@@ -117,7 +134,7 @@ public class Guest : MonoBehaviour
 					else if (IsAtRoomDoor())
 					{
 						shortestPath = null;
-						if (needs.Any() && vacationBudget > 0 && vacationTime > 0)
+						if (needs.Count > 0 && VacationBudget > 0 && VacationTime > 0)
 						{
 							TryFindRoom();
 						}
@@ -135,9 +152,9 @@ public class Guest : MonoBehaviour
 				{
 					float priceToPay = currentRoom.roomType.PricePerSecond * Time.deltaTime;
 
-					if (vacationBudget < priceToPay) priceToPay = vacationBudget;
+					if (VacationBudget < priceToPay) priceToPay = VacationBudget;
 
-					vacationBudget -= priceToPay;
+					VacationBudget -= priceToPay;
 					MapManager.hotelStateData.Money += priceToPay;
 					
 					var needDecrease = Time.deltaTime * currentRoom.NeedFulfillingRate;
@@ -158,7 +175,7 @@ public class Guest : MonoBehaviour
 							if (Random.Range(0, 5) == 0)
 								MoveToNeighbouringTile();
 
-							currentPathfindCooldown = pathfindCooldown;
+							currentPathfindCooldown = PathfindCooldown;
 						}
 						else
 						{
@@ -193,7 +210,7 @@ public class Guest : MonoBehaviour
 		//ticks down once the hotel has been entered, even while waiting in the lobby
 		if (currentActivity != GuestActivity.Arriving)
 		{
-			vacationTime -= Time.deltaTime;
+			VacationTime -= Time.deltaTime;
 
 		}
 	}
@@ -347,7 +364,7 @@ public class Guest : MonoBehaviour
 		
 		if (visitableRooms.Count == 0)
 		{
-			currentPathfindCooldown = pathfindCooldown;
+			currentPathfindCooldown = PathfindCooldown;
 			return;
 		}
 
