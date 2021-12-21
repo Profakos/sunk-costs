@@ -14,7 +14,12 @@ public class HotelManager : MonoBehaviour
 	private GuestManager guestManager;
 	private MapManager mapManager;
 	private GameObject debugButtonGroup;
-	private GameObject gameplayButtonGroup;
+	private GameObject luxuryRoomButtonGroup;
+	private Button[] luxuryRoomButtons;
+	private GameObject regularRoomButtonGroup;
+	private Button[] regularRoomButtons;
+	
+	private bool luxuriousSelected = false;
 
 	private Image timerImage;
 	private TextMeshProUGUI moneyDisplay;
@@ -33,23 +38,17 @@ public class HotelManager : MonoBehaviour
 		hotelStateData.Money = 500;
 		hotelStateData.moneyChangeHandler += UpdateMoneyDisplay;
 		UpdateMoneyDisplay();
-
-		gameplayButtonGroup = GameObject.Find("GameplayButtonGroup");
-
-		Button[] buttons = gameplayButtonGroup.GetComponentsInChildren<Button>(true); 
-		List<GameObject> roomObjects = mapManager.roomTypes;
-		 
-		for(int buttonIndex = 0, roomIndex = 0; buttonIndex < buttons.Length && roomIndex < roomObjects.Count; buttonIndex++, roomIndex++)
-		{
-			TextMeshProUGUI buttonText = buttons[buttonIndex].GetComponentInChildren<TextMeshProUGUI>();
-			HotelRoom room = roomObjects[roomIndex].GetComponent<HotelRoom>();
-			buttonText.SetText(room.GetPurchaseLabel());
-		}
+		
+		luxuryRoomButtonGroup = GameObject.Find("LuxuryRoomButtonGroup"); ;
+		regularRoomButtonGroup = GameObject.Find("RegularRoomButtonGroup");
+		
+		SetupPurchaseButtons(luxuryRoomButtonGroup.GetComponentsInChildren<Button>(true), mapManager.luxuryRoomTypes, luxuryRoomButtonGroup, true);
+		SetupPurchaseButtons(regularRoomButtonGroup.GetComponentsInChildren<Button>(true), mapManager.regularRoomTypes, regularRoomButtonGroup, false);
 
 		TextMeshProUGUI newFloorButton = GameObject.Find("SelectFloor").GetComponentInChildren<TextMeshProUGUI>();
 		newFloorButton.SetText(mapManager.GetNewFloorPurchaseLabel());
 	}
-
+	
 	void OnDestroy()
 	{
 		hotelStateData.moneyChangeHandler -= UpdateMoneyDisplay;
@@ -69,7 +68,7 @@ public class HotelManager : MonoBehaviour
 		{
 			if(!EventSystem.current.IsPointerOverGameObject())
 			{
-				mapManager.BuildRoom();
+				mapManager.BuildRoom(luxuriousSelected);
 			}
 		}
 
@@ -150,6 +149,25 @@ public class HotelManager : MonoBehaviour
 	}
 
 	/// <summary>
+	/// Sets the text of the purchase buttons
+	/// </summary>
+	/// <param name="roomButtons"></param>
+	/// <param name="roomObjects"></param>
+	/// <param name="buttonGroup"></param>
+	/// <param name="hide"></param>
+	private void SetupPurchaseButtons(Button[] roomButtons, List<GameObject> roomObjects, GameObject buttonGroup, bool hide)
+	{
+		for (int buttonIndex = 0, roomIndex = 0; buttonIndex < roomButtons.Length && roomIndex < roomObjects.Count; buttonIndex++, roomIndex++)
+		{
+			TextMeshProUGUI buttonText = roomButtons[buttonIndex].GetComponentInChildren<TextMeshProUGUI>();
+			HotelRoom room = roomObjects[roomIndex].GetComponent<HotelRoom>();
+			buttonText.SetText(room.GetPurchaseLabel());
+		}
+
+		if (hide) buttonGroup.SetActive(false);
+	}
+
+	/// <summary>
 	/// Updates the money display
 	/// </summary>
 	private void UpdateMoneyDisplay()
@@ -163,6 +181,16 @@ public class HotelManager : MonoBehaviour
 	/// <param name="index"></param>
 	public void UpdatePreviewButton(int index)
 	{
-		mapManager.UpdatePreview(index);
+		mapManager.UpdatePreview(index, luxuriousSelected);
+	}
+	
+	public void SelectLuxuriousness(bool newLuxuriousSelectedValue)
+	{
+		luxuriousSelected = newLuxuriousSelectedValue;
+
+		mapManager.UpdatePreview(0, luxuriousSelected);
+
+		luxuryRoomButtonGroup.SetActive(luxuriousSelected);
+		regularRoomButtonGroup.SetActive(!luxuriousSelected);
 	}
 }

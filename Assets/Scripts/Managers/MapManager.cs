@@ -9,7 +9,8 @@ public class MapManager : MonoBehaviour
 
 	public RoomPreview preview;
 	public int selectedRoomIndex = 0;
-	public List<GameObject> roomTypes;
+	public List<GameObject> regularRoomTypes;
+	public List<GameObject> luxuryRoomTypes;
 	public GameObject backRoomPrefab;
 
 	public List<GameObject> hotelBackRooms = new List<GameObject>();
@@ -47,18 +48,20 @@ public class MapManager : MonoBehaviour
 	/// <summary>
 	/// Creates the selected room type at the current location, if possible
 	/// </summary>
-	public void BuildRoom()
+	public void BuildRoom(bool luxuriousSelected)
 	{
-		if (roomTypes.Count < selectedRoomIndex) return;
+		if (regularRoomTypes.Count < selectedRoomIndex) return;
 
-		var roomToBuild = roomTypes[selectedRoomIndex];
+		var roomToBuild = luxuriousSelected ? luxuryRoomTypes[selectedRoomIndex] : regularRoomTypes[selectedRoomIndex];
 
 		HotelRoom hotelRoom = roomToBuild.GetComponent<HotelRoom>();
 
 		if (!hotelRoom)
 			return;
 
-		if (hotelStateData.Money < hotelRoom.roomType.PurchasePrice)
+		float purchasePrice = hotelRoom.roomType.PurchasePrice * hotelRoom.LuxuryMultiplier;
+
+		if (hotelStateData.Money < purchasePrice)
 		{
 			Debug.Log("Not enough money");
 			return;
@@ -117,7 +120,7 @@ public class MapManager : MonoBehaviour
 
 		hotelRooms.Add(newRoom);
 
-		hotelStateData.Money -= hotelRoom.roomType.PurchasePrice;
+		hotelStateData.Money -= purchasePrice;
 
 		foreach (var coordinate in coordinatesToAdd)
 		{
@@ -215,13 +218,13 @@ public class MapManager : MonoBehaviour
 	/// Updates the selected room type
 	/// </summary>
 	/// <param name="index"></param>
-	public void UpdatePreview(int index)
+	public void UpdatePreview(int index, bool luxuriousSelected)
 	{
 		selectedRoomIndex = index;
 
-		if (roomTypes.Count < selectedRoomIndex) return;
+		if (regularRoomTypes.Count < selectedRoomIndex) return;
 
-		var roomToBuild = roomTypes[selectedRoomIndex];
+		var roomToBuild = luxuriousSelected? luxuryRoomTypes[selectedRoomIndex] : regularRoomTypes[selectedRoomIndex];
 
 		preview.UpdateSprite(roomToBuild.GetComponent<SpriteRenderer>());
 	}

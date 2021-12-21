@@ -15,6 +15,9 @@ public class HotelRoom : MonoBehaviour
 
 	private float needFulfillingRate = 1f;
 
+	[SerializeField]
+	private float luxuryMultiplier = 1f;
+
 	public int currentCapacity;
 	
 	public int Capacity { get => currentCapacity; set { currentCapacity = value; } } 
@@ -28,10 +31,10 @@ public class HotelRoom : MonoBehaviour
 
 	public Vector2 DoorOffset { get => roomType.DoorOffset; }
 	public float NeedFulfillingRate { get => needFulfillingRate; set => needFulfillingRate = value; }
+	public float LuxuryMultiplier { get => luxuryMultiplier; set => luxuryMultiplier = value; }
 
 	public delegate void SinkingDelegate(bool floodedOrSunk);
 	public event SinkingDelegate sinkingHandler;
-
 
 	void Awake()
 	{
@@ -125,14 +128,14 @@ public class HotelRoom : MonoBehaviour
 	/// <returns></returns>
 	public string GetPurchaseLabel()
 	{
-		string purchaseLabel = roomType.RoomLabel;
+		string purchaseLabel =  LuxuryMultiplier > 1 ? "L." + roomType.RoomLabel : roomType.RoomLabel;
 
 		foreach(var need in roomType.NeedTypesSatisfied)
 		{
 			purchaseLabel += " <sprite name=\"" + need.ToString() + "\">";
 		}
 
-		purchaseLabel += ", $" + roomType.PurchasePrice;
+		purchaseLabel += ", $" + roomType.PurchasePrice * LuxuryMultiplier;
 		return purchaseLabel;
 	}
 	

@@ -149,7 +149,7 @@ public class Guest : MonoBehaviour
 				}
 				else
 				{
-					float priceToPay = hotelStateData.RoomRentPerSecond * Time.deltaTime;
+					float priceToPay = hotelStateData.RoomRentPerSecond * currentRoom.LuxuryMultiplier * Time.deltaTime;
 
 					if (VacationBudget < priceToPay) priceToPay = VacationBudget;
 

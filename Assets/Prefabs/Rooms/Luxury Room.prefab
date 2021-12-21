@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &5337551031894192632
+--- !u!1001 &2918901286557212983
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -20,7 +20,7 @@ PrefabInstance:
     - target: {fileID: 2172862344063350013, guid: 3954a3c2abcd0364db18fd7515202936,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2172862344063350013, guid: 3954a3c2abcd0364db18fd7515202936,
         type: 3}
@@ -64,66 +64,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
         type: 3}
-      propertyPath: capacity
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
-        type: 3}
-      propertyPath: roomType
-      value: 
-      objectReference: {fileID: 11400000, guid: d469d727fbfdc1e42a8425e46f37435b,
-        type: 2}
-    - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
-        type: 3}
-      propertyPath: roomLabel
-      value: Snack
-      objectReference: {fileID: 0}
-    - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
-        type: 3}
-      propertyPath: roomShape
-      value: 
-      objectReference: {fileID: 11400000, guid: 2fbf2273954f49a458c269de0efd56b2,
-        type: 2}
-    - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
-        type: 3}
-      propertyPath: guestCapacity
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
-        type: 3}
-      propertyPath: purchasePrice
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
-        type: 3}
       propertyPath: luxuryMultiplier
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4778660199440494886, guid: 3954a3c2abcd0364db18fd7515202936,
         type: 3}
       propertyPath: m_Name
-      value: Snack
+      value: Luxury Room
       objectReference: {fileID: 0}
     - target: {fileID: 7537959866073862459, guid: 3954a3c2abcd0364db18fd7515202936,
         type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 53a1fbaa1e68d144f96bf344afe0138d,
-        type: 3}
-    - target: {fileID: 7537959866073862459, guid: 3954a3c2abcd0364db18fd7515202936,
-        type: 3}
       propertyPath: m_Color.b
-      value: 1
+      value: 0.9411765
       objectReference: {fileID: 0}
     - target: {fileID: 7537959866073862459, guid: 3954a3c2abcd0364db18fd7515202936,
         type: 3}
       propertyPath: m_Color.g
-      value: 1
+      value: 0.58682805
       objectReference: {fileID: 0}
     - target: {fileID: 7537959866073862459, guid: 3954a3c2abcd0364db18fd7515202936,
         type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0.98039216
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3954a3c2abcd0364db18fd7515202936, type: 3}
