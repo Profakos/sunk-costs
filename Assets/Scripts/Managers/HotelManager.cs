@@ -23,7 +23,8 @@ public class HotelManager : MonoBehaviour
 
 	private Image timerImage;
 	private TextMeshProUGUI moneyDisplay;
-	
+	private Image ratingImage;
+
 	void Awake()
 	{
 		debugButtonGroup = GameObject.Find("DebugButtonGroup");
@@ -31,13 +32,17 @@ public class HotelManager : MonoBehaviour
 
 		timerImage = GameObject.Find("TimerImage").GetComponent<UnityEngine.UI.Image>();
 		moneyDisplay = GameObject.Find("MoneyDisplay").GetComponent<TextMeshProUGUI>();
-		
+		ratingImage = GameObject.Find("HotelRatingFull").GetComponent<UnityEngine.UI.Image>();
+
 		guestManager = gameObject.GetComponent<GuestManager>();
 		mapManager = gameObject.GetComponent<MapManager>();
 
 		hotelStateData.Money = 500;
 		hotelStateData.moneyChangeHandler += UpdateMoneyDisplay;
 		UpdateMoneyDisplay();
+		hotelStateData.CurrentHotelRating = 4;
+		hotelStateData.ratingChangeHandler += UpdateRatingDisplay;
+		UpdateRatingDisplay();
 		
 		luxuryRoomButtonGroup = GameObject.Find("LuxuryRoomButtonGroup"); ;
 		regularRoomButtonGroup = GameObject.Find("RegularRoomButtonGroup");
@@ -52,6 +57,7 @@ public class HotelManager : MonoBehaviour
 	void OnDestroy()
 	{
 		hotelStateData.moneyChangeHandler -= UpdateMoneyDisplay;
+		hotelStateData.ratingChangeHandler -= UpdateRatingDisplay;
 	}
 
 	// Start is called before the first frame update
@@ -176,6 +182,14 @@ public class HotelManager : MonoBehaviour
 	}
 
 	/// <summary>
+	/// Updates the rating display
+	/// </summary>
+	private void UpdateRatingDisplay()
+	{
+		ratingImage.fillAmount = hotelStateData.CurrentHotelRating / hotelStateData.MaxHotelRating;
+	}
+
+	/// <summary>
 	/// Handless pressing the button that selects the room type to place
 	/// </summary>
 	/// <param name="index"></param>
@@ -184,6 +198,11 @@ public class HotelManager : MonoBehaviour
 		mapManager.UpdatePreview(index, luxuriousSelected);
 	}
 	
+	/// <summary>
+	/// Selects if we want to see the regular or a luxurious room set
+	/// TODO: make this per room type instead
+	/// </summary>
+	/// <param name="newLuxuriousSelectedValue"></param>
 	public void SelectLuxuriousness(bool newLuxuriousSelectedValue)
 	{
 		luxuriousSelected = newLuxuriousSelectedValue;
