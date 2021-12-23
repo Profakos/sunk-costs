@@ -7,34 +7,20 @@ using System.Linq;
 public class Guest : MonoBehaviour
 {
 	public HotelStateData hotelStateData;
-
-	public Vector2 EntrancePoint { get; set; }
-	public Vector2 ExitPoint { get; set; }
-	public Vector2 DespawnPoint { get; set; }
-	public MapManager MapManager { get; set; }
-	public float LuxuryMultiplier { get => luxuryMultiplier; set => luxuryMultiplier = value; }
-	public float VacationTime { get => vacationTime; set => vacationTime = value; }
-	public float VacationBudget { get => vacationBudget; set => vacationBudget = value; }
-	public float CurrentPathfindCooldown { get => currentPathfindCooldown; set => currentPathfindCooldown = value; }
-
-	public static float PathfindCooldown => pathfindCooldown;
-
-	public static float WaitingBuffer => waitingBuffer;
-
+	
 	private Rigidbody2D rigidBody;
 	private SpriteRenderer sprite;
-	private TextMeshPro needsDisplayText;
 
 	[SerializeField]
 	private GuestActivity currentActivity;
 
 	private float minimumTargetDistance = 0.02f;
-	
+
 	[SerializeField]
 	private Vector2 target;
-	private int speed = 2;
+	private float speed = 2f;
 	private bool moving = true;
-	
+
 	private float durationPerNeed = 10f;
 
 	[SerializeField]
@@ -42,6 +28,12 @@ public class Guest : MonoBehaviour
 
 	private float luxuryMultiplier = 1;
 
+	private Color luxuryColour = new Color(0.38f, 0.32f, 0.52f);
+
+	[SerializeField]
+	private float currentVacationTime;
+	[SerializeField]
+	private float currentVacationBudget;
 	[SerializeField]
 	private float vacationTime;
 	[SerializeField]
@@ -55,12 +47,28 @@ public class Guest : MonoBehaviour
 	private HotelRoom currentRoom = null;
 	private List<Vector2> shortestPath = null;
 
+	private float totalWaitingTime = 0f;
+	private float totalWrongLuxuryTime = 0f;
+
+	public Vector2 EntrancePoint { get; set; }
+	public Vector2 ExitPoint { get; set; }
+	public Vector2 DespawnPoint { get; set; }
+	public MapManager MapManager { get; set; }
+	public float LuxuryMultiplier { get => luxuryMultiplier; set => luxuryMultiplier = value; }
+	public float CurrentVacationTime { get => currentVacationTime; set => currentVacationTime = value; }
+	public float CurrentVacationBudget { get => currentVacationBudget; set => currentVacationBudget = value; }
+	public float CurrentPathfindCooldown { get => currentPathfindCooldown; set => currentPathfindCooldown = value; }
+	public float PathfindCooldown => pathfindCooldown;
+	public float WaitingBuffer => waitingBuffer;
+	public float VacationTime { get => vacationTime; set => vacationTime = value; }
+	public float VacationBudget { get => vacationBudget; set => vacationBudget = value; }
+	public float TotalWrongLuxuryTime { get => totalWrongLuxuryTime; set => totalWrongLuxuryTime = value; }
+	public float TotalWaitingTime { get => totalWaitingTime; set => totalWaitingTime = value; }
+
 	void Awake()
 	{
 		rigidBody = gameObject.GetComponent<Rigidbody2D>();
 		sprite = gameObject.GetComponent<SpriteRenderer>();
-		needsDisplayText = gameObject.GetComponentInChildren<TextMeshPro>();
-		needsDisplayText.SetText("");
 
 		currentActivity = GuestActivity.Arriving;
 		
@@ -119,7 +127,7 @@ public class Guest : MonoBehaviour
 				}
 				break;
 			case GuestActivity.Enjoying:
-				if (IsAllNeedsSatisfiedByRoom() || VacationBudget <= 0 || VacationTime <= 0)
+				if (IsAllNeedsSatisfiedByRoom() || VacationBudget <= 0 || CurrentVacationTime <= 0)
 				{
 
 					if (moving)
@@ -133,7 +141,7 @@ public class Guest : MonoBehaviour
 					else if (IsAtRoomDoor())
 					{
 						shortestPath = null;
-						if (needs.Count > 0 && VacationBudget > 0 && VacationTime > 0)
+						if (needs.Count > 0 && VacationBudget > 0 && CurrentVacationTime > 0)
 						{
 							TryFindRoom();
 						}
@@ -155,7 +163,9 @@ public class Guest : MonoBehaviour
 
 					VacationBudget -= priceToPay;
 					hotelStateData.Money += priceToPay;
-					
+
+					TotalWrongLuxuryTime += Time.deltaTime;
+
 					var needDecrease = Time.deltaTime * currentRoom.NeedFulfillingRate;
 
 					foreach (NeedType needBeingFulfilled in currentRoom.roomType.NeedTypesSatisfied)
@@ -201,6 +211,8 @@ public class Guest : MonoBehaviour
 				break;
 			case GuestActivity.Waiting:
 
+				TotalWaitingTime += Time.deltaTime;
+
 				TryFindRoom();
 
 				break;
@@ -209,7 +221,7 @@ public class Guest : MonoBehaviour
 		//ticks down once the hotel has been entered, even while waiting in the lobby
 		if (currentActivity != GuestActivity.Arriving)
 		{
-			VacationTime -= Time.deltaTime;
+			CurrentVacationTime -= Time.deltaTime;
 
 		}
 	}
@@ -240,7 +252,6 @@ public class Guest : MonoBehaviour
 	/// </summary>
 	public void ForceLeave()
 	{
-		needs.Clear();
 		UpdateNeedsDisplay();
 		BeginLeaving();
 	}
@@ -331,6 +342,15 @@ public class Guest : MonoBehaviour
 	}
 
 	/// <summary>
+	/// Gets the guest's need duration
+	/// </summary>
+	/// <returns></returns>
+	private float GetNeedDuration()
+	{
+		return durationPerNeed * LuxuryMultiplier;
+	}
+
+	/// <summary>
 	/// The guest selects their desires
 	/// </summary>
 	private void SetupNeeds()
@@ -339,14 +359,14 @@ public class Guest : MonoBehaviour
 		{
 			LuxuryMultiplier = 2f;
 
-			sprite.color = new Color(0.38f, 0.32f, 0.52f);
+			sprite.color = luxuryColour;
 		}
 
-		needs.Add(NeedType.Sleep, durationPerNeed * LuxuryMultiplier);
+		needs.Add(NeedType.Sleep, GetNeedDuration());
 
 		List<NeedType> possibleNeeds = System.Enum.GetValues(typeof(NeedType)).Cast<NeedType>().ToList();
 		possibleNeeds.Remove(NeedType.Sleep);
-		needs.Add(possibleNeeds[Random.Range(0, possibleNeeds.Count)], durationPerNeed * LuxuryMultiplier);
+		needs.Add(possibleNeeds[Random.Range(0, possibleNeeds.Count)], GetNeedDuration());
 
 		UpdateNeedsDisplay();
 
@@ -355,6 +375,8 @@ public class Guest : MonoBehaviour
 		VacationBudget = hotelStateData.RoomRentPerSecond * totalNeed * LuxuryMultiplier;
 		VacationTime = totalNeed + WaitingBuffer;
 
+		CurrentVacationBudget = VacationBudget;
+		CurrentVacationTime = VacationTime;
 	}
 
 	/// <summary>
@@ -476,7 +498,6 @@ public class Guest : MonoBehaviour
 	{
 		var sortingLayerId = SortingLayer.NameToID(layerName);
 		sprite.sortingLayerID = sortingLayerId;
-		needsDisplayText.sortingLayerID = sortingLayerId;
 	}
 
 	/// <summary>
@@ -504,14 +525,6 @@ public class Guest : MonoBehaviour
 	/// </summary>
 	private void UpdateNeedsDisplay()
 	{
-		string needsDisplay = "";
-
-		foreach (var need in needs.Keys)
-		{
-			needsDisplay += " <sprite name=\"" + need.ToString() + "\">";
-		}
-
-		needsDisplayText.SetText(needsDisplay);
 	}
 
 	/// <summary>
@@ -519,6 +532,26 @@ public class Guest : MonoBehaviour
 	/// </summary>
 	private void LeaveReview()
 	{
-		MapManager.hotelStateData.AddReview(5);
+		int reviewPoints = hotelStateData.MaxHotelRating;
+
+		//if waited for longer than a percentage of vacation: penalty
+		if (TotalWaitingTime > VacationTime * 0.1) reviewPoints--;
+
+		//if the unsatisfied need amount is too large, -1 or -2
+		foreach(var need in needs)
+		{
+			if (need.Value > GetNeedDuration() * 0.7) reviewPoints--;
+			if (need.Value > GetNeedDuration() * 0.4) reviewPoints--;
+		}
+
+		//if spent too much time in wrong luxury rooms, -1
+		if (totalWrongLuxuryTime > VacationTime * 0.2) reviewPoints--;
+
+		//minimum is one
+		if (reviewPoints < 1) reviewPoints = 1;
+
+		Debug.Log("Review point: " + reviewPoints);
+
+		MapManager.hotelStateData.AddReview(reviewPoints);
 	}
 }
