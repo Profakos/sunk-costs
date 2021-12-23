@@ -39,10 +39,13 @@ public class HotelManager : MonoBehaviour
 
 		hotelStateData.Money = 500;
 		hotelStateData.moneyChangeHandler += UpdateMoneyDisplay;
-		UpdateMoneyDisplay();
-		hotelStateData.CurrentHotelRating = 3;
+
+		hotelStateData.CurrentHotelRating = 0;
 		hotelStateData.ratingChangeHandler += UpdateRatingDisplay;
-		UpdateRatingDisplay();
+
+		List<float> initReviews = new List<float>();
+		for (int i = 0; i < hotelStateData.MaxReviewRemembered; i++) initReviews.Add(1);
+		hotelStateData.AddReviews(initReviews);
 		
 		luxuryRoomButtonGroup = GameObject.Find("LuxuryRoomButtonGroup"); ;
 		regularRoomButtonGroup = GameObject.Find("RegularRoomButtonGroup");
@@ -64,7 +67,9 @@ public class HotelManager : MonoBehaviour
 	void Start()
 	{
 		timerImage.fillAmount = 0;
-		
+
+		UpdateMoneyDisplay();
+		UpdateRatingDisplay();
 	}
 
 	// Update is called once per frame

@@ -450,6 +450,8 @@ public class Guest : MonoBehaviour
 	/// </summary>
 	private void BeginLeaving()
 	{
+		if (currentActivity == GuestActivity.Leaving) return;
+
 		if(currentRoom != null)
 		{
 			ChangeRoom(null);
@@ -462,8 +464,14 @@ public class Guest : MonoBehaviour
 		target = DespawnPoint;
 		currentActivity = GuestActivity.Leaving;
 		moving = true;
+
+		LeaveReview();
 	} 
 
+	/// <summary>
+	/// Changes what surting layer the guest, and its associated sprites are on
+	/// </summary>
+	/// <param name="layerName"></param>
 	private void ChangeSortingLayer(string layerName)
 	{
 		var sortingLayerId = SortingLayer.NameToID(layerName);
@@ -504,5 +512,13 @@ public class Guest : MonoBehaviour
 		}
 
 		needsDisplayText.SetText(needsDisplay);
+	}
+
+	/// <summary>
+	/// Leaves a review of the hotel
+	/// </summary>
+	private void LeaveReview()
+	{
+		MapManager.hotelStateData.AddReview(5);
 	}
 }
