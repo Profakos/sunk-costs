@@ -335,8 +335,7 @@ public class Guest : MonoBehaviour
 	/// </summary>
 	private void SetupNeeds()
 	{
-
-		if (Random.Range(1, 100) < 10) // 10% chance of luxury
+		if (Random.Range(1, 100) < 15 * hotelStateData.CurrentHotelRatingPercentage)
 		{
 			LuxuryMultiplier = 2f;
 

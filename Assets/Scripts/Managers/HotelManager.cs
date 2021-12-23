@@ -40,7 +40,7 @@ public class HotelManager : MonoBehaviour
 		hotelStateData.Money = 500;
 		hotelStateData.moneyChangeHandler += UpdateMoneyDisplay;
 		UpdateMoneyDisplay();
-		hotelStateData.CurrentHotelRating = 4;
+		hotelStateData.CurrentHotelRating = 3;
 		hotelStateData.ratingChangeHandler += UpdateRatingDisplay;
 		UpdateRatingDisplay();
 		
@@ -186,7 +186,7 @@ public class HotelManager : MonoBehaviour
 	/// </summary>
 	private void UpdateRatingDisplay()
 	{
-		ratingImage.fillAmount = hotelStateData.CurrentHotelRating / hotelStateData.MaxHotelRating;
+		ratingImage.fillAmount = hotelStateData.CurrentHotelRatingPercentage;
 	}
 
 	/// <summary>

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,15 +31,16 @@ public class HotelStateData : ScriptableObject
 	public event ValueChangeDelegate ratingChangeHandler;
 
 
-	public float CurrentHotelHeight { get => currentHotelHeight; set => currentHotelHeight = value; }
+	public float CurrentHotelHeight { get => currentHotelHeight; set => currentHotelHeight = Math.Max(0, value); }
 	public float InitialHotelHeight { get => initialHotelHeight; }
 	public int TotalSpawnedFloors { get; set; }
 
-	public float Money { get => money; set { money = value; if(moneyChangeHandler != null)moneyChangeHandler.Invoke(); } }
+	public float Money { get => money; set { money = Math.Max(0, value); if(moneyChangeHandler != null)moneyChangeHandler.Invoke(); } }
 
 	public float FloorPurchasePrice { get => floorPurchasePrice; set => floorPurchasePrice = value; }
 	public string FloorLabel { get => floorLabel; set => floorLabel = value; }
 	public float RoomRentPerSecond { get => roomRentPerSecond; set => roomRentPerSecond = value; }
 	public int MaxHotelRating { get => maxHotelRating; set => maxHotelRating = value; }
-	public float CurrentHotelRating { get => currentHotelRating; set { currentHotelRating = value; if (ratingChangeHandler != null) ratingChangeHandler.Invoke(); } }
+	public float CurrentHotelRating { get => currentHotelRating; set { currentHotelRating = Math.Max(0, Math.Min(value, maxHotelRating)); if (ratingChangeHandler != null) ratingChangeHandler.Invoke(); } }
+	public float CurrentHotelRatingPercentage { get => currentHotelRating / maxHotelRating; }
 }

@@ -12,4 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ff87efb5ba0841478cd4f37cce53de8, type: 3}
   m_Name: HotelState
   m_EditorClassIdentifier: 
-  currentHotelHeight: 0
+  currentHotelHeight: 4
+  money: 437.73566
+  roomRentPerSecond: 1
+  floorPurchasePrice: 15
+  floorLabel: New Floor
+  maxHotelRating: 5
+  currentHotelRating: 3

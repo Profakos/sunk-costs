@@ -73,9 +73,16 @@ public class GuestManager : MonoBehaviour
 	/// <returns></returns>
 	public IEnumerator SpawnGuests()
 	{
-		int guestNum = Random.Range(1, 3);
+		int possibleGuestNum = 1;
 
-		for(int i = 0; i < guestNum; i++)
+		float currentRatingPercentage = mapManager.hotelStateData.CurrentHotelRatingPercentage;
+
+		if (currentRatingPercentage > 0.4f) possibleGuestNum += 1;
+		if (currentRatingPercentage > 0.8f) possibleGuestNum += 1;
+
+		int guestNum = Random.Range(1, possibleGuestNum + 1);
+
+		for (int i = 0; i < guestNum; i++)
 		{
 			GameObject guestComponent = Instantiate(guestPrefab, guestSpawner.position, Quaternion.identity);
 			Guest guest = guestComponent.GetComponent<Guest>();
