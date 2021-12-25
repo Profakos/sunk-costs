@@ -15,6 +15,7 @@ public class Guest : MonoBehaviour
 	
 	private SpriteRenderer guaranteedNeedSprite;
 	private SpriteRenderer randomNeedSprite;
+	private SpriteRenderer guestSadFaceSprite;
 
 	[SerializeField]
 	private GuestData guestData;
@@ -77,6 +78,8 @@ public class Guest : MonoBehaviour
 
 		guaranteedNeedSprite = gameObject.transform.Find("GuaranteedNeed").GetComponent<SpriteRenderer>();
 		randomNeedSprite = gameObject.transform.Find("RandomNeed").GetComponent<SpriteRenderer>();
+		guestSadFaceSprite = gameObject.transform.Find("GuestSadFace").GetComponent<SpriteRenderer>();
+		guestSadFaceSprite.enabled = false;
 
 		currentActivity = GuestActivity.Arriving;
 		
@@ -431,11 +434,13 @@ public class Guest : MonoBehaviour
 
 		if(roomsMatchingLuxuryLevel.Count > 0)
 		{
+			guestSadFaceSprite.enabled = false;
 			int randomRoomIndex = Random.Range(0, roomsMatchingLuxuryLevel.Count);
 			roomToVisit = roomsMatchingLuxuryLevel[randomRoomIndex];
 		}
 		else
 		{
+			guestSadFaceSprite.enabled = true;
 			int randomRoomIndex = Random.Range(0, visitableRooms.Count);
 			roomToVisit = visitableRooms[randomRoomIndex];
 		}
