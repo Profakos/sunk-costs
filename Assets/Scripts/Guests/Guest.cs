@@ -383,6 +383,7 @@ public class Guest : MonoBehaviour
 			LuxuryMultiplier = 2f;
 
 			sprite.color = guestData.LuxuryColour;
+			guestSadFaceSprite.color = guestData.LuxuryColour;
 		}
 
 		var guaranteedNeed = guestData.GuaranteedNeed;
@@ -434,13 +435,11 @@ public class Guest : MonoBehaviour
 
 		if(roomsMatchingLuxuryLevel.Count > 0)
 		{
-			guestSadFaceSprite.enabled = false;
 			int randomRoomIndex = Random.Range(0, roomsMatchingLuxuryLevel.Count);
 			roomToVisit = roomsMatchingLuxuryLevel[randomRoomIndex];
 		}
 		else
 		{
-			guestSadFaceSprite.enabled = true;
 			int randomRoomIndex = Random.Range(0, visitableRooms.Count);
 			roomToVisit = visitableRooms[randomRoomIndex];
 		}
@@ -472,6 +471,8 @@ public class Guest : MonoBehaviour
 
 		if (currentRoom != null)
 		{
+			guestSadFaceSprite.enabled = luxuryMultiplier != currentRoom.LuxuryMultiplier;
+
 			currentRoom.GuestAmount++;
 			currentRoom.SubscribeSink(HandleSinking);
 		}
@@ -587,7 +588,9 @@ public class Guest : MonoBehaviour
 
 		//minimum is one
 		if (reviewPoints < 1) reviewPoints = 1;
-		
+
+		guestSadFaceSprite.enabled = reviewPoints < hotelStateData.MaxHotelRating * 0.5f;
+
 		MapManager.hotelStateData.AddReview(reviewPoints);
 	}
 }
