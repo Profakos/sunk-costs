@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-[CreateAssetMenu(fileName = "HotelSize", menuName = "ScriptableObjects/HotelData/HotelState", order = 2)]
+[CreateAssetMenu(fileName = "HotelStateData", menuName = "ScriptableObjects/HotelData/HotelState", order = 2)]
 public class HotelStateData : ScriptableObject
 {
 	public delegate void ValueChangeDelegate();

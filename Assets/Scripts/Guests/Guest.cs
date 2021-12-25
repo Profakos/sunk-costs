@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System.Linq;
+using UnityEngine.Rendering;
 
 public class Guest : MonoBehaviour
 {
@@ -10,25 +11,28 @@ public class Guest : MonoBehaviour
 	
 	private Rigidbody2D rigidBody;
 	private SpriteRenderer sprite;
+	private SortingGroup sortingGroup;
+	
+	private SpriteRenderer guaranteedNeedSprite;
+	private SpriteRenderer randomNeedSprite;
+
+	[SerializeField]
+	private GuestData guestData;
 
 	[SerializeField]
 	private GuestActivity currentActivity;
 
-	private float minimumTargetDistance = 0.02f;
 
 	[SerializeField]
 	private Vector2 target;
 	private float speed = 2f;
 	private bool moving = true;
-
-	private float durationPerNeed = 10f;
-
+	
 	[SerializeField]
 	private Dictionary<NeedType, float> needs = new Dictionary<NeedType, float>();
+	private Dictionary<NeedType, NeedData> needDatas = new Dictionary<NeedType, NeedData>();
 
 	private float luxuryMultiplier = 1;
-
-	private Color luxuryColour = new Color(0.38f, 0.32f, 0.52f);
 
 	[SerializeField]
 	private float currentVacationTime;
@@ -40,9 +44,9 @@ public class Guest : MonoBehaviour
 	private float vacationBudget;
 
 	private const float waitingBuffer = 10f;
+	private const float pathfindCooldown = 0.5f;
 
 	private float currentPathfindCooldown = 0f;
-	private const float pathfindCooldown = 0.5f;
 
 	private HotelRoom currentRoom = null;
 	private List<Vector2> shortestPath = null;
@@ -69,6 +73,10 @@ public class Guest : MonoBehaviour
 	{
 		rigidBody = gameObject.GetComponent<Rigidbody2D>();
 		sprite = gameObject.GetComponent<SpriteRenderer>();
+		sortingGroup = gameObject.GetComponent<SortingGroup>();
+
+		guaranteedNeedSprite = gameObject.transform.Find("GuaranteedNeed").GetComponent<SpriteRenderer>();
+		randomNeedSprite = gameObject.transform.Find("RandomNeed").GetComponent<SpriteRenderer>();
 
 		currentActivity = GuestActivity.Arriving;
 		
@@ -121,7 +129,7 @@ public class Guest : MonoBehaviour
 		switch (currentActivity)
 		{
 			case GuestActivity.Arriving:
-				if (distanceToTarget < minimumTargetDistance)
+				if (distanceToTarget < guestData.MinimumTargetDistance)
 				{
 					FinishArriving();
 				}
@@ -132,7 +140,7 @@ public class Guest : MonoBehaviour
 
 					if (moving)
 					{
-						if (distanceToTarget < minimumTargetDistance)
+						if (distanceToTarget < guestData.MinimumTargetDistance)
 						{
 							transform.position = target;
 							moving = false;
@@ -173,7 +181,19 @@ public class Guest : MonoBehaviour
 						if (!needs.ContainsKey(needBeingFulfilled)) continue;
 
 						needs[needBeingFulfilled] -= needDecrease;
-						if (needs[needBeingFulfilled] < 0) needs.Remove(needBeingFulfilled);
+						if (needs[needBeingFulfilled] < 0) {
+							needs.Remove(needBeingFulfilled);
+							needDatas.Remove(needBeingFulfilled);
+
+							if (needBeingFulfilled == guestData.GuaranteedNeed.NeedType)
+							{
+								guaranteedNeedSprite.enabled = false;
+							}
+							else
+							{
+								randomNeedSprite.enabled = false;
+							}
+						};
 					}
 
 					if (!moving)
@@ -194,7 +214,7 @@ public class Guest : MonoBehaviour
 					}
 					else
 					{
-						if (distanceToTarget < minimumTargetDistance)
+						if (distanceToTarget < guestData.MinimumTargetDistance)
 						{
 							transform.position = target;	
 							moving = false;
@@ -204,7 +224,7 @@ public class Guest : MonoBehaviour
 				}
 				break;
 			case GuestActivity.Leaving:
-				if (distanceToTarget < minimumTargetDistance)
+				if (distanceToTarget < guestData.MinimumTargetDistance)
 				{
 					Destroy(this.gameObject);
 				}
@@ -345,9 +365,9 @@ public class Guest : MonoBehaviour
 	/// Gets the guest's need duration
 	/// </summary>
 	/// <returns></returns>
-	private float GetNeedDuration()
+	private float GetNeedDuration(NeedData needData)
 	{
-		return durationPerNeed * LuxuryMultiplier;
+		return needData.NeedDuration * LuxuryMultiplier;
 	}
 
 	/// <summary>
@@ -359,14 +379,19 @@ public class Guest : MonoBehaviour
 		{
 			LuxuryMultiplier = 2f;
 
-			sprite.color = luxuryColour;
+			sprite.color = guestData.LuxuryColour;
 		}
 
-		needs.Add(NeedType.Sleep, GetNeedDuration());
+		var guaranteedNeed = guestData.GuaranteedNeed;
 
-		List<NeedType> possibleNeeds = System.Enum.GetValues(typeof(NeedType)).Cast<NeedType>().ToList();
-		possibleNeeds.Remove(NeedType.Sleep);
-		needs.Add(possibleNeeds[Random.Range(0, possibleNeeds.Count)], GetNeedDuration());
+		needs.Add(guaranteedNeed.NeedType, GetNeedDuration(guaranteedNeed));
+		needDatas.Add(guaranteedNeed.NeedType, guaranteedNeed);
+		guaranteedNeedSprite.sprite = guaranteedNeed.Sprite;
+
+		var randomNeed = guestData.PickNeed;
+		needs.Add(randomNeed.NeedType, GetNeedDuration(randomNeed));
+		needDatas.Add(randomNeed.NeedType, randomNeed);
+		randomNeedSprite.sprite = randomNeed.Sprite;
 
 		UpdateNeedsDisplay();
 
@@ -480,7 +505,6 @@ public class Guest : MonoBehaviour
 			transform.position = ExitPoint;
 
 			ChangeSortingLayer("GuestBehindHotel");
-
 		}
 
 		target = DespawnPoint;
@@ -497,7 +521,7 @@ public class Guest : MonoBehaviour
 	private void ChangeSortingLayer(string layerName)
 	{
 		var sortingLayerId = SortingLayer.NameToID(layerName);
-		sprite.sortingLayerID = sortingLayerId;
+		sortingGroup.sortingLayerID = sortingLayerId;
 	}
 
 	/// <summary>
@@ -525,6 +549,13 @@ public class Guest : MonoBehaviour
 	/// </summary>
 	private void UpdateNeedsDisplay()
 	{
+		string needsDisplay = "";
+
+		foreach (var need in needs.Keys)
+		{
+			needsDisplay += " <sprite name=\"" + need.ToString() + "\">";
+		}
+		
 	}
 
 	/// <summary>
@@ -540,8 +571,10 @@ public class Guest : MonoBehaviour
 		//if the unsatisfied need amount is too large, -1 or -2
 		foreach(var need in needs)
 		{
-			if (need.Value > GetNeedDuration() * 0.7) reviewPoints--;
-			if (need.Value > GetNeedDuration() * 0.4) reviewPoints--;
+			var needData = needDatas[need.Key];
+
+			if (need.Value > GetNeedDuration(needData) * 0.7) reviewPoints--;
+			if (need.Value > GetNeedDuration(needData) * 0.4) reviewPoints--;
 		}
 
 		//if spent too much time in wrong luxury rooms, -1
@@ -549,9 +582,7 @@ public class Guest : MonoBehaviour
 
 		//minimum is one
 		if (reviewPoints < 1) reviewPoints = 1;
-
-		Debug.Log("Review point: " + reviewPoints);
-
+		
 		MapManager.hotelStateData.AddReview(reviewPoints);
 	}
 }

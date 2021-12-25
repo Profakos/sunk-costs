@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 782f3fb03d03cb84c8d8c1515a3a2bf6, type: 3}
+  m_Name: GuestData
+  m_EditorClassIdentifier: 
+  guaranteedNeed: {fileID: 11400000, guid: 2c39cf09fa4f52346b133c489a4aa5eb, type: 2}
+  randomNeeds:
+  - {fileID: 11400000, guid: 84c3204f5c0bab5408346fa830a09c82, type: 2}
+  - {fileID: 11400000, guid: 950347df2284cfc45908b1dac43129db, type: 2}
+  - {fileID: 11400000, guid: 62c2774742bd8274eb54af61abcad4f5, type: 2}
+  - {fileID: 11400000, guid: 217e89c81831b95499e6a8b5f6f4e5e8, type: 2}
