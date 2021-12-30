@@ -6,7 +6,7 @@ public class GuestManager : MonoBehaviour
 {
 	private MapManager mapManager;
 
-	public GameObject guestPrefab;
+	public Guest guestPrefab;
 
 	private Transform guestDespawner;
 	private Transform guestSpawner;
@@ -84,8 +84,7 @@ public class GuestManager : MonoBehaviour
 
 		for (int i = 0; i < guestNum; i++)
 		{
-			GameObject guestComponent = Instantiate(guestPrefab, guestSpawner.position, Quaternion.identity);
-			Guest guest = guestComponent.GetComponent<Guest>();
+			Guest guest = Instantiate(guestPrefab, guestSpawner.position, Quaternion.identity);
 
 			guest.DespawnPoint = guestDespawner.position;
 			guest.EntrancePoint = guestEntrance.position;

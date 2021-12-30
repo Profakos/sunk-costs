@@ -166,7 +166,7 @@ public class HotelManager : MonoBehaviour
 	/// <param name="roomObjects"></param>
 	/// <param name="buttonGroup"></param>
 	/// <param name="hide"></param>
-	private void SetupPurchaseButtons(Button[] roomButtons, List<GameObject> roomObjects, GameObject buttonGroup, bool hide)
+	private void SetupPurchaseButtons(Button[] roomButtons, List<HotelRoom> roomObjects, GameObject buttonGroup, bool hide)
 	{
 		for (int buttonIndex = 0, roomIndex = 0; buttonIndex < roomButtons.Length && roomIndex < roomObjects.Count; buttonIndex++, roomIndex++)
 		{

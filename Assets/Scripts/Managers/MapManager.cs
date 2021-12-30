@@ -9,8 +9,8 @@ public class MapManager : MonoBehaviour
 
 	public RoomPreview preview;
 	public int selectedRoomIndex = 0;
-	public List<GameObject> regularRoomTypes;
-	public List<GameObject> luxuryRoomTypes;
+	public List<HotelRoom> regularRoomTypes;
+	public List<HotelRoom> luxuryRoomTypes;
 	public GameObject backRoomPrefab;
 
 	public List<GameObject> hotelBackRooms = new List<GameObject>();
@@ -112,8 +112,7 @@ public class MapManager : MonoBehaviour
 
 		if (!roomToBuild) return;
 
-		GameObject newRoomObject = Instantiate(roomToBuild, preview.transform.position, preview.transform.rotation);
-		HotelRoom newRoom = newRoomObject.GetComponent<HotelRoom>();
+		HotelRoom newRoom = Instantiate(roomToBuild, preview.transform.position, preview.transform.rotation);
 
 		if (!newRoom)
 			return;

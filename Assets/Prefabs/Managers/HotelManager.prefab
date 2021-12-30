@@ -65,17 +65,17 @@ MonoBehaviour:
   preview: {fileID: 0}
   selectedRoomIndex: 0
   regularRoomTypes:
-  - {fileID: 4778660199440494886, guid: 3954a3c2abcd0364db18fd7515202936, type: 3}
-  - {fileID: 595596928681509086, guid: 35ee297951c274548b46caafcc276610, type: 3}
-  - {fileID: 5735215796976646715, guid: 8bea7f180f6143f4996e11848fb1075e, type: 3}
-  - {fileID: 2957712916566447360, guid: 47a16eee8c34e7b418058b14d3d48604, type: 3}
-  - {fileID: 7620587257399987059, guid: fe97424197b57c048909821c85f10475, type: 3}
+  - {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936, type: 3}
+  - {fileID: 7477443474050607748, guid: 35ee297951c274548b46caafcc276610, type: 3}
+  - {fileID: 2310732645614030945, guid: 8bea7f180f6143f4996e11848fb1075e, type: 3}
+  - {fileID: 452339928039727401, guid: fe97424197b57c048909821c85f10475, type: 3}
+  - {fileID: 5083758323602194266, guid: 47a16eee8c34e7b418058b14d3d48604, type: 3}
   luxuryRoomTypes:
-  - {fileID: 7697552689581707281, guid: f991128a773893241aa620d6bb3523c6, type: 3}
-  - {fileID: 4636237680560120451, guid: 2d7d8f531f50fde4d8e32fa698c82f73, type: 3}
-  - {fileID: 8188897930918992572, guid: 0777ab3c428c159479882a8397b6ae88, type: 3}
-  - {fileID: 3294730861644823710, guid: eb6efe7cb3069ed4ab94b9e77a3d75f1, type: 3}
-  - {fileID: 893896695711464351, guid: 85f402b69e3c9ca4a85f69b5f39b4a59, type: 3}
+  - {fileID: 384486142217009739, guid: f991128a773893241aa620d6bb3523c6, type: 3}
+  - {fileID: 3445802250942302425, guid: 2d7d8f531f50fde4d8e32fa698c82f73, type: 3}
+  - {fileID: 2171302577300500710, guid: 0777ab3c428c159479882a8397b6ae88, type: 3}
+  - {fileID: 7197043814370873797, guid: 85f402b69e3c9ca4a85f69b5f39b4a59, type: 3}
+  - {fileID: 4773805965485168324, guid: eb6efe7cb3069ed4ab94b9e77a3d75f1, type: 3}
   backRoomPrefab: {fileID: 3981547880261531114, guid: b4417a7bc64a8014f9eb3d971a8419e9,
     type: 3}
   hotelBackRooms: []
@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73ff10f31851a4142acd9f1b11cdc427, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guestPrefab: {fileID: 1325863587677664404, guid: 1c1a764bfba7e424fa6e5677d07b7175,
+  guestPrefab: {fileID: -8953512543928948514, guid: 1c1a764bfba7e424fa6e5677d07b7175,
     type: 3}
   spawnDelay: 6
   timeUntilNextGuestWave: 0
