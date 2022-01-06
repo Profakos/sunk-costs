@@ -5,10 +5,12 @@ using UnityEngine;
 public class MapManager : MonoBehaviour
 {
 	public HotelSizeData hotelSizeData;
+	public HotelStateData hotelStateData;
 
 	public RoomPreview preview;
 	public int selectedRoomIndex = 0;
-	public List<GameObject> roomTypes;
+	public List<HotelRoom> regularRoomTypes;
+	public List<HotelRoom> luxuryRoomTypes;
 	public GameObject backRoomPrefab;
 
 	public List<GameObject> hotelBackRooms = new List<GameObject>();
@@ -16,15 +18,18 @@ public class MapManager : MonoBehaviour
 	public List<Vector2> usedCoordinates = new List<Vector2>();
 
 	public Vector3 worldToHotelOffset;
+	
+	public float FloorPurchasePrice { get => hotelStateData.FloorPurchasePrice; set => hotelStateData.FloorPurchasePrice = value; }
+	public string FloorLabel { get => hotelStateData.FloorLabel; set => hotelStateData.FloorLabel = value; }
 
-	public int TotalSpawnedFloors { get; set; } = 0;
 
 	void Awake()
 	{
 		worldToHotelOffset = new Vector3(hotelSizeData.MinX, hotelSizeData.MinY, 0);
 		
 		preview = GameObject.Find("RoomPreview").gameObject.GetComponent<RoomPreview>();
-		hotelSizeData.CurrentHotelHeight = hotelSizeData.InitialHotelHeight;
+		hotelStateData.CurrentHotelHeight = hotelStateData.InitialHotelHeight;
+		hotelStateData.TotalSpawnedFloors = (int)hotelStateData.InitialHotelHeight;
 		NewFloor();
 	}
 
@@ -43,16 +48,24 @@ public class MapManager : MonoBehaviour
 	/// <summary>
 	/// Creates the selected room type at the current location, if possible
 	/// </summary>
-	public void BuildRoom()
+	public void BuildRoom(bool luxuriousSelected)
 	{
-		if (roomTypes.Count < selectedRoomIndex) return;
+		if (regularRoomTypes.Count < selectedRoomIndex) return;
 
-		var roomToBuild = roomTypes[selectedRoomIndex];
+		var roomToBuild = luxuriousSelected ? luxuryRoomTypes[selectedRoomIndex] : regularRoomTypes[selectedRoomIndex];
 
 		HotelRoom hotelRoom = roomToBuild.GetComponent<HotelRoom>();
 
 		if (!hotelRoom)
 			return;
+
+		float purchasePrice = hotelRoom.roomType.PurchasePrice * hotelRoom.LuxuryMultiplier;
+
+		if (hotelStateData.Money < purchasePrice)
+		{
+			Debug.Log("Not enough money");
+			return;
+		}
 
 		RoomShapeData roomShapeData = hotelRoom.roomShape;
 
@@ -82,7 +95,7 @@ public class MapManager : MonoBehaviour
 				return;
 			}
 
-			if (coordinateToCheck.y >= hotelSizeData.CurrentHotelHeight)
+			if (coordinateToCheck.y >= hotelStateData.CurrentHotelHeight)
 			{
 				Debug.Log("Too high");
 				return;
@@ -99,13 +112,14 @@ public class MapManager : MonoBehaviour
 
 		if (!roomToBuild) return;
 
-		GameObject newRoomObject = Instantiate(roomToBuild, preview.transform.position, preview.transform.rotation);
-		HotelRoom newRoom = newRoomObject.GetComponent<HotelRoom>();
+		HotelRoom newRoom = Instantiate(roomToBuild, preview.transform.position, preview.transform.rotation);
 
 		if (!newRoom)
 			return;
 
 		hotelRooms.Add(newRoom);
+
+		hotelStateData.Money -= purchasePrice;
 
 		foreach (var coordinate in coordinatesToAdd)
 		{
@@ -115,26 +129,41 @@ public class MapManager : MonoBehaviour
 	}
 
 	/// <summary>
+	/// Formats the price of the new floor for the label
+	/// </summary>
+	/// <returns></returns>
+	public string GetNewFloorPurchaseLabel()
+	{
+		return FloorLabel + ", $" + FloorPurchasePrice;
+	}
+
+	/// <summary>
 	/// Creates a new floor if possible
 	/// </summary>
 	public void NewFloor()
 	{
 		if (hotelSizeData != null)
 		{
-			if (hotelSizeData.MinY + hotelSizeData.CurrentHotelHeight + 1 > hotelSizeData.MaxY) return;
+			if (hotelSizeData.MinY + hotelStateData.CurrentHotelHeight + 1 > hotelSizeData.MaxY) return;
 
-			hotelSizeData.CurrentHotelHeight++;
-			TotalSpawnedFloors++;
+			hotelStateData.CurrentHotelHeight++;
+			hotelStateData.TotalSpawnedFloors++;
+
+			if (hotelStateData.Money < FloorPurchasePrice)
+			{
+				Debug.Log("Not enough money");
+				return;
+			}
 
 			if (backRoomPrefab != null)
 			{
-				Vector3 newBackRoomPos = new Vector3(backRoomPrefab.transform.position.x, hotelSizeData.MinY + hotelSizeData.CurrentHotelHeight - 1, 0);
+				Vector3 newBackRoomPos = new Vector3(backRoomPrefab.transform.position.x, hotelSizeData.MinY + hotelStateData.CurrentHotelHeight - 1, 0);
 
 				GameObject newBackRoom = Instantiate(backRoomPrefab, newBackRoomPos, backRoomPrefab.transform.rotation);
 
+				hotelStateData.Money -= FloorPurchasePrice;
 				hotelBackRooms.Add(newBackRoom);
 			}
-			
 		}
 	}
 
@@ -179,7 +208,8 @@ public class MapManager : MonoBehaviour
 			}
 		}
 
-		hotelSizeData.CurrentHotelHeight -= 1;
+		if(hotelStateData.CurrentHotelHeight > 0)
+			hotelStateData.CurrentHotelHeight -= 1;
 
 	}
 
@@ -187,13 +217,13 @@ public class MapManager : MonoBehaviour
 	/// Updates the selected room type
 	/// </summary>
 	/// <param name="index"></param>
-	public void UpdatePreview(int index)
+	public void UpdatePreview(int index, bool luxuriousSelected)
 	{
 		selectedRoomIndex = index;
 
-		if (roomTypes.Count < selectedRoomIndex) return;
+		if (regularRoomTypes.Count < selectedRoomIndex) return;
 
-		var roomToBuild = roomTypes[selectedRoomIndex];
+		var roomToBuild = luxuriousSelected? luxuryRoomTypes[selectedRoomIndex] : regularRoomTypes[selectedRoomIndex];
 
 		preview.UpdateSprite(roomToBuild.GetComponent<SpriteRenderer>());
 	}

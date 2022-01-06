@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -97,6 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomShape: {fileID: 11400000, guid: 8f1a693ef4d859344a30fb38c9ad4a7d, type: 2}
-  hotelSizeData: {fileID: 11400000, guid: 3ca961cb7df0c334e839b637abdbb4ec, type: 2}
-  capacity: 1
+  hotelSizeData: {fileID: 11400000, guid: 202af44923a31e84594facd34e87a6b1, type: 2}
+  roomType: {fileID: 11400000, guid: 142484b7e0078484b9fa85f5ea8b6e29, type: 2}
+  guestAmount: 0
   spriteRenderer: {fileID: 0}

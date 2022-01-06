@@ -8,13 +8,19 @@ public class HotelRoom : MonoBehaviour
 	public RoomShapeData roomShape;
 	public HotelSizeData hotelSizeData;
 
-	[SerializeField]
-	private int capacity;
+	public RoomType roomType;
+
 	[SerializeField]
 	private int guestAmount;
-	public Vector2 doorOffset;
 
-	public int Capacity { get => capacity; } 
+	private float needFulfillingRate = 1f;
+
+	[SerializeField]
+	private float luxuryMultiplier = 1f;
+
+	public int currentCapacity;
+	
+	public int Capacity { get => currentCapacity; set { currentCapacity = value; } } 
 	public bool AtCapacity => guestAmount >= Capacity;
 
 	public SpriteRenderer spriteRenderer;
@@ -22,6 +28,10 @@ public class HotelRoom : MonoBehaviour
 	public bool Sunk { get; set; }
 	public bool Flooded { get; set; }
 	public int GuestAmount { get => guestAmount; set => guestAmount = value; }
+
+	public Vector2 DoorOffset { get => roomType.DoorOffset; }
+	public float NeedFulfillingRate { get => needFulfillingRate; set => needFulfillingRate = value; }
+	public float LuxuryMultiplier { get => luxuryMultiplier; set => luxuryMultiplier = value; }
 
 	public delegate void SinkingDelegate(bool floodedOrSunk);
 	public event SinkingDelegate sinkingHandler;
@@ -34,7 +44,7 @@ public class HotelRoom : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		
+		currentCapacity = roomType.GuestCapacity;
 	}
 
 	// Update is called once per frame
@@ -49,7 +59,7 @@ public class HotelRoom : MonoBehaviour
 	/// <returns></returns>
 	public Vector2 DoorPosition()
 	{
-		return (Vector2)gameObject.transform.position + doorOffset;
+		return (Vector2)gameObject.transform.position + DoorOffset;
 	}
 	
 	/// <summary>
@@ -73,6 +83,7 @@ public class HotelRoom : MonoBehaviour
 		{
 			Flooded = true;
 			spriteRenderer.color = Color.yellow;
+			Capacity = 0;
 		}
 		
 		if(floodedTiles == roomShape.OffsetFromRoomCenter.Length)
@@ -109,6 +120,23 @@ public class HotelRoom : MonoBehaviour
 		{
 			return Comparer<float>.Default.Compare(pd[x].dist, pd[y].dist);
 		}
+	}
+
+	/// <summary>
+	/// Formats the price of the room for the label
+	/// </summary>
+	/// <returns></returns>
+	public string GetPurchaseLabel()
+	{
+		string purchaseLabel =  LuxuryMultiplier > 1 ? "L." + roomType.RoomLabel : roomType.RoomLabel;
+
+		foreach(var need in roomType.NeedTypesSatisfied)
+		{
+			purchaseLabel += " <sprite name=\"" + need.ToString() + "\">";
+		}
+
+		purchaseLabel += ", $" + roomType.PurchasePrice * LuxuryMultiplier;
+		return purchaseLabel;
 	}
 	
 	/// <summary>

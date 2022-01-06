@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "HotelSize", menuName = "ScriptableObjects/HotelSizeData", order = 1)]
+[CreateAssetMenu(fileName = "HotelSize", menuName = "ScriptableObjects/HotelData/HotelSize", order = 1)]
 public class HotelSizeData : ScriptableObject
 {
 	[SerializeField]
@@ -15,16 +15,10 @@ public class HotelSizeData : ScriptableObject
 	private float minY;
 	[SerializeField]
 	private float maxY;
-
-	private float initialHotelHeight = 0;
-	[SerializeField]
-	private float currentHotelHeight;
-
-	public float CurrentHotelHeight { get => currentHotelHeight; set => currentHotelHeight = Mathf.Max( 0f, Mathf.Min(value, MaxY - MinY)); }
+	
 	public float Scale { get => scale; set => scale = value; }
 	public float MinX { get => minX; set => minX = value; }
 	public float MaxX { get => maxX; set => maxX = value; }
 	public float MinY { get => minY; set => minY = value; }
 	public float MaxY { get => maxY; set => maxY = value; }
-	public float InitialHotelHeight { get => initialHotelHeight; }
 }

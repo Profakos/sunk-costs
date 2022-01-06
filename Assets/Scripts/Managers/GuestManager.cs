@@ -6,13 +6,16 @@ public class GuestManager : MonoBehaviour
 {
 	private MapManager mapManager;
 
-	public GameObject guestPrefab;
+	public Guest guestPrefab;
 
 	private Transform guestDespawner;
 	private Transform guestSpawner;
 
 	private Transform guestEntrance;
 	private Transform guestExit;
+
+	public float spawnDelay = 6f;
+	public float timeUntilNextGuestWave = 0f;
 
 	void Awake()
 	{
@@ -28,13 +31,17 @@ public class GuestManager : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		SpawnGuest();
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		
+		timeUntilNextGuestWave -= Time.deltaTime;
+		if(timeUntilNextGuestWave <= 0f)
+		{
+			StartCoroutine(SpawnGuests());
+			timeUntilNextGuestWave = spawnDelay;
+		}
 	}
 	
 	/// <summary>
@@ -60,15 +67,33 @@ public class GuestManager : MonoBehaviour
 		}
 	}
 
-	public void SpawnGuest()
+	/// <summary>
+	/// Coroutine that handles the spawning of guests
+	/// </summary>
+	/// <returns></returns>
+	public IEnumerator SpawnGuests()
 	{
-		GameObject guestComponent = Instantiate(guestPrefab, guestSpawner.position, Quaternion.identity);
-		Guest guest = guestComponent.GetComponent<Guest>();
+		int possibleGuestNum = 1;
 
-		guest.DespawnPoint = guestDespawner.position;
-		guest.EntrancePoint = guestEntrance.position;
-		guest.ExitPoint = guestExit.position;
+		float currentRatingPercentage = mapManager.hotelStateData.CurrentHotelRatingPercentage;
 
-		guest.MapManager = mapManager;
+		if (currentRatingPercentage > 0.4f) possibleGuestNum += 1;
+		if (currentRatingPercentage > 0.8f) possibleGuestNum += 1;
+
+		int guestNum = Random.Range(1, possibleGuestNum + 1);
+
+		for (int i = 0; i < guestNum; i++)
+		{
+			Guest guest = Instantiate(guestPrefab, guestSpawner.position, Quaternion.identity);
+
+			guest.DespawnPoint = guestDespawner.position;
+			guest.EntrancePoint = guestEntrance.position;
+			guest.ExitPoint = guestExit.position;
+
+			guest.MapManager = mapManager;
+			 
+			yield return new WaitForSeconds(.2f);
+		}
+		 
 	}
 }

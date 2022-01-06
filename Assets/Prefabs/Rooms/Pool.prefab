@@ -69,6 +69,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
         type: 3}
+      propertyPath: roomType
+      value: 
+      objectReference: {fileID: 11400000, guid: 8d2331217f2feba49a48aa3743043136,
+        type: 2}
+    - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
+        type: 3}
+      propertyPath: roomLabel
+      value: Pool
+      objectReference: {fileID: 0}
+    - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
+        type: 3}
       propertyPath: roomShape
       value: 
       objectReference: {fileID: 11400000, guid: a9bc9985ac088df428e4069fe0fa97f8,
@@ -82,6 +93,16 @@ PrefabInstance:
         type: 3}
       propertyPath: doorOffset.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
+        type: 3}
+      propertyPath: guestCapacity
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
+        type: 3}
+      propertyPath: purchasePrice
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4778660199440494886, guid: 3954a3c2abcd0364db18fd7515202936,
         type: 3}

@@ -69,10 +69,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
         type: 3}
+      propertyPath: roomType
+      value: 
+      objectReference: {fileID: 11400000, guid: 87c20601817201a4babdcaca23d2e591,
+        type: 2}
+    - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
+        type: 3}
+      propertyPath: roomLabel
+      value: Lounge
+      objectReference: {fileID: 0}
+    - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
+        type: 3}
       propertyPath: roomShape
       value: 
       objectReference: {fileID: 11400000, guid: 2893947bfbea51d4ab65e9a63809ebad,
         type: 2}
+    - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
+        type: 3}
+      propertyPath: guestCapacity
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3303387417780411260, guid: 3954a3c2abcd0364db18fd7515202936,
+        type: 3}
+      propertyPath: purchasePrice
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 4778660199440494886, guid: 3954a3c2abcd0364db18fd7515202936,
         type: 3}
       propertyPath: m_Name

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "RoomShapeData", menuName = "ScriptableObjects/RoomShapeData", order = 1)]
+[CreateAssetMenu(fileName = "RoomShapeData", menuName = "ScriptableObjects/RoomData/RoomShapeData", order = 1)]
 public class RoomShapeData : ScriptableObject
 {
 	[SerializeField]
