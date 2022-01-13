@@ -7,8 +7,19 @@ using UnityEngine.Rendering;
 
 public class Guest : MonoBehaviour
 {
-	public HotelStateData hotelStateData;
-	
+	[Header("ScriptableObjects")]
+	/// <summary>
+	/// SO containing the hotel's current stats
+	/// </summary>
+	[SerializeField]
+	private HotelStateData hotelStateData;
+
+	/// <summary>
+	/// Guest data scriptable object
+	/// </summary>
+	[SerializeField]
+	private GuestData guestData = null;
+
 	private Rigidbody2D rigidBody;
 	private SpriteRenderer sprite;
 	private SortingGroup sortingGroup;
@@ -17,19 +28,15 @@ public class Guest : MonoBehaviour
 	private SpriteRenderer randomNeedSprite;
 	private SpriteRenderer guestSadFaceSprite;
 
-	[SerializeField]
-	private GuestData guestData;
-
+	[Header("Activity tracking")]
 	[SerializeField]
 	private GuestActivity currentActivity;
-
-
 	[SerializeField]
 	private Vector2 target;
+
 	private float speed = 2f;
 	private bool moving = true;
 	
-	[SerializeField]
 	private Dictionary<NeedType, float> needs = new Dictionary<NeedType, float>();
 	private Dictionary<NeedType, NeedData> needDatas = new Dictionary<NeedType, NeedData>();
 
@@ -422,7 +429,7 @@ public class Guest : MonoBehaviour
 
 		HotelRoom roomToVisit = null;
 
-		List<HotelRoom> visitableRooms = MapManager.hotelRooms.FindAll(r => !r.Flooded && !r.Sunk && r != currentRoom
+		List<HotelRoom> visitableRooms = MapManager.HotelRooms.FindAll(r => !r.Flooded && !r.Sunk && r != currentRoom
 		&& !r.AtCapacity && IsAnyRelevantNeed(r.roomType.NeedTypesSatisfied));
 		
 		if (visitableRooms.Count == 0)
@@ -591,6 +598,6 @@ public class Guest : MonoBehaviour
 
 		guestSadFaceSprite.enabled = reviewPoints < hotelStateData.MaxHotelRating * 0.5f;
 
-		MapManager.hotelStateData.AddReview(reviewPoints);
+		hotelStateData.AddReview(reviewPoints);
 	}
 }

@@ -4,30 +4,65 @@ using UnityEngine;
 
 public class MapManager : MonoBehaviour
 {
-	public HotelSizeData hotelSizeData;
-	public HotelStateData hotelStateData;
+	[Header("ScriptableObjects")]
+	/// <summary>
+	/// SO containing the hotel's dimensions
+	/// </summary>
+	[SerializeField]
+	private HotelSizeData hotelSizeData;
+	/// <summary>
+	/// SO containing the hotel's current stats
+	/// </summary>
+	[SerializeField]
+	private HotelStateData hotelStateData;
 
-	public RoomPreview preview;
-	public int selectedRoomIndex = 0;
-	public List<HotelRoom> regularRoomTypes;
-	public List<HotelRoom> luxuryRoomTypes;
-	public GameObject backRoomPrefab;
+	[Header("References")]
+	/// <summary>
+	/// The room preview highlight
+	/// </summary>
+	[SerializeField]
+	private RoomPreview preview;
 
-	public List<GameObject> hotelBackRooms = new List<GameObject>();
-	public List<HotelRoom> hotelRooms = new List<HotelRoom>();
-	public List<Vector2> usedCoordinates = new List<Vector2>();
+	[Header("Prefabs")]
+	[SerializeField]
+	private List<HotelRoom> regularRoomTypes;
+	[SerializeField]
+	private List<HotelRoom> luxuryRoomTypes;
+	[SerializeField]
+	private GameObject backRoomPrefab;
 
-	public Vector3 worldToHotelOffset;
-	
+	/// <summary>
+	/// The list of the currently existing backrooms
+	/// </summary>
+	private List<GameObject> hotelBackRooms = new List<GameObject>();
+	/// <summary>
+	/// The list of the currently existing hotel rooms
+	/// </summary>
+	private List<HotelRoom> hotelRooms = new List<HotelRoom>();
+	/// <summary>
+	/// The list of the currently used coordinates
+	/// </summary>
+	private List<Vector2> usedCoordinates = new List<Vector2>();
+
+	/// <summary>
+	/// The offset between the hotel and the world
+	/// </summary>
+	private Vector3 worldToHotelOffset;
+	/// <summary>
+	/// The room index of the currently selected room
+	/// </summary>
+	private int selectedRoomIndex = 0;
+
 	public float FloorPurchasePrice { get => hotelStateData.FloorPurchasePrice; set => hotelStateData.FloorPurchasePrice = value; }
 	public string FloorLabel { get => hotelStateData.FloorLabel; set => hotelStateData.FloorLabel = value; }
-
+	public List<HotelRoom> RegularRoomTypes { get => regularRoomTypes; }
+	public List<HotelRoom> LuxuryRoomTypes { get => luxuryRoomTypes; }
+	public List<HotelRoom> HotelRooms { get => hotelRooms; }
 
 	void Awake()
 	{
 		worldToHotelOffset = new Vector3(hotelSizeData.MinX, hotelSizeData.MinY, 0);
 		
-		preview = GameObject.Find("RoomPreview").gameObject.GetComponent<RoomPreview>();
 		hotelStateData.CurrentHotelHeight = hotelStateData.InitialHotelHeight;
 		hotelStateData.TotalSpawnedFloors = (int)hotelStateData.InitialHotelHeight;
 		NewFloor();

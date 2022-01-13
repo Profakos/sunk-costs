@@ -7,36 +7,64 @@ using UnityEngine.UI;
 
 public class HotelManager : MonoBehaviour
 {
-	public HotelSizeData hotelSizeData;
-	public HotelStateData hotelStateData;
 
-	private HotelSinkingTimer hotelSinkingTimer = new HotelSinkingTimer();
-	private GuestManager guestManager;
-	private MapManager mapManager;
-	private GameObject debugButtonGroup;
-	private GameObject luxuryRoomButtonGroup;
-	private Button[] luxuryRoomButtons;
-	private GameObject regularRoomButtonGroup;
-	private Button[] regularRoomButtons;
+	[Header("ScriptableObjects")]
+	/// <summary>
+	/// SO containing the hotel's dimensions
+	/// </summary>
+	[SerializeField]
+	private HotelSizeData hotelSizeData;
+
+	/// <summary>
+	/// SO containing the hotel's current stats
+	/// </summary>
+	[SerializeField]
+	private HotelStateData hotelStateData;
+
+
+	[Header("Managers")]
+	/// <summary>
+	/// Manager that handles the spawning of guests
+	/// </summary>
+	[SerializeField]
+	private GuestManager guestManager = null;
+
+	/// <summary>
+	/// Manager that handles the creation of rooms
+	/// </summary>
+	[SerializeField]
+	private MapManager mapManager = null;
 	
+	/// <summary>
+	/// Elastic timer that manages the hotel's sinking
+	/// </summary>
+	private HotelSinkingTimer hotelSinkingTimer = new HotelSinkingTimer();
+	
+	[Header("UI elements")]
+	[SerializeField]
+	private GameObject debugButtonGroup = null;
+	[SerializeField]
+	private GameObject luxuryRoomButtonGroup = null;
+	[SerializeField]
+	private GameObject regularRoomButtonGroup = null;
+	[SerializeField]
+	private Button newFloorButton = null;
+	[SerializeField]
+	private Image timerImage = null;
+	[SerializeField]
+	private TextMeshProUGUI moneyDisplay = null;
+	[SerializeField]
+	private Image ratingImage = null;
+	
+	/// <summary>
+	/// Toggled by selecting the desired building menu
+	/// </summary>
 	private bool luxuriousSelected = false;
-
-	private Image timerImage;
-	private TextMeshProUGUI moneyDisplay;
-	private Image ratingImage;
 
 	void Awake()
 	{
-		debugButtonGroup = GameObject.Find("DebugButtonGroup");
 		debugButtonGroup.SetActive(false);
-
-		timerImage = GameObject.Find("TimerImage").GetComponent<UnityEngine.UI.Image>();
-		moneyDisplay = GameObject.Find("MoneyDisplay").GetComponent<TextMeshProUGUI>();
-		ratingImage = GameObject.Find("HotelRatingFull").GetComponent<UnityEngine.UI.Image>();
-
-		guestManager = gameObject.GetComponent<GuestManager>();
-		mapManager = gameObject.GetComponent<MapManager>();
-
+		
 		hotelStateData.Money = 500;
 		hotelStateData.moneyChangeHandler += UpdateMoneyDisplay;
 
@@ -47,14 +75,10 @@ public class HotelManager : MonoBehaviour
 		for (int i = 0; i < hotelStateData.MaxReviewRemembered; i++) initReviews.Add(1);
 		hotelStateData.AddReviews(initReviews);
 		
-		luxuryRoomButtonGroup = GameObject.Find("LuxuryRoomButtonGroup"); ;
-		regularRoomButtonGroup = GameObject.Find("RegularRoomButtonGroup");
+		SetupPurchaseButtons(luxuryRoomButtonGroup.GetComponentsInChildren<Button>(true), mapManager.LuxuryRoomTypes, luxuryRoomButtonGroup, true);
+		SetupPurchaseButtons(regularRoomButtonGroup.GetComponentsInChildren<Button>(true), mapManager.RegularRoomTypes, regularRoomButtonGroup, false);
 		
-		SetupPurchaseButtons(luxuryRoomButtonGroup.GetComponentsInChildren<Button>(true), mapManager.luxuryRoomTypes, luxuryRoomButtonGroup, true);
-		SetupPurchaseButtons(regularRoomButtonGroup.GetComponentsInChildren<Button>(true), mapManager.regularRoomTypes, regularRoomButtonGroup, false);
-
-		TextMeshProUGUI newFloorButton = GameObject.Find("SelectFloor").GetComponentInChildren<TextMeshProUGUI>();
-		newFloorButton.SetText(mapManager.GetNewFloorPurchaseLabel());
+		newFloorButton.GetComponentInChildren<TextMeshProUGUI>().SetText(mapManager.GetNewFloorPurchaseLabel());
 	}
 	
 	void OnDestroy()
@@ -174,7 +198,7 @@ public class HotelManager : MonoBehaviour
 			HotelRoom room = roomObjects[roomIndex].GetComponent<HotelRoom>();
 			buttonText.SetText(room.GetPurchaseLabel());
 		}
-
+		
 		if (hide) buttonGroup.SetActive(false);
 	}
 

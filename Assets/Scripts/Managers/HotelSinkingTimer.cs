@@ -5,11 +5,26 @@ using UnityEngine;
 
 public class HotelSinkingTimer
 {
+	/// <summary>
+	/// Current timer, unlike other timers, this counts up
+	/// </summary>
 	private float timerCurrent = 0f;
+	/// <summary>
+	/// Target we are counting up towards, it can be changed elastically
+	/// </summary>
 	private float timerTarget = 0f;
+	/// <summary>
+	/// Is the timer active
+	/// </summary>
 	private bool timerActive = false;
 
+	/// <summary>
+	/// Minimum timer amount always added to the timer
+	/// </summary>
 	private float minTimer = 5f;
+	/// <summary>
+	/// Variable amount that is added to the timer, scales based on gameplay
+	/// </summary>
 	private float variableTimer = 15f;
 
 	public float TimerCurrent { get => timerCurrent; set => timerCurrent = value; }

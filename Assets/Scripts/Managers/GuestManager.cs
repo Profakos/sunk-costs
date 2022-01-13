@@ -4,28 +4,74 @@ using UnityEngine;
 
 public class GuestManager : MonoBehaviour
 {
+	[Header("ScriptableObjects")]
+	/// <summary>
+	/// SO containing the hotel's current stats
+	/// </summary>
+	[SerializeField]
+	private HotelStateData hotelStateData;
+
+	[Header("Managers")]
+
+	/// <summary>
+	/// Map manager reference
+	/// </summary>
+	[SerializeField]
 	private MapManager mapManager;
 
-	public Guest guestPrefab;
+	[Header("Prefabs")]
 
-	private Transform guestDespawner;
-	private Transform guestSpawner;
+	/// <summary>
+	/// Basic guest prefab
+	/// </summary>
+	[SerializeField]
+	private Guest guestPrefab = null;
 
-	private Transform guestEntrance;
-	private Transform guestExit;
 
-	public float spawnDelay = 6f;
-	public float timeUntilNextGuestWave = 0f;
+	[Header("Transforms")]
+
+	/// <summary>
+	/// Guests vanish here
+	/// </summary>
+	[SerializeField]
+	private Transform guestDespawner = null;
+	/// <summary>
+	/// Guests appear here
+	/// </summary>
+	[SerializeField]
+	private Transform guestSpawner = null;
+	/// <summary>
+	/// Guests head to this point to enter the hotel
+	/// </summary>
+	[SerializeField]
+	private Transform guestEntrance = null;
+	/// <summary>
+	/// Guests exit the hotel here
+	/// </summary>
+	[SerializeField]
+	private Transform guestExit = null;
+
+	[Header("Guest management")]
+	/// <summary>
+	/// The general time between guest spawns
+	/// </summary>
+	[SerializeField]
+	private float SpawnDelayBetweenWaves = 6f;
+	/// <summary>
+	/// The current time until the next guest spawn
+	/// </summary>
+	[SerializeField]
+	private float spawnCountdown = 0f;
+	/// <summary>
+	/// Time between guests within a wave
+	/// </summary>
+	[SerializeField]
+	private float spawnDelayBetweenGuests = .2f;
 
 	void Awake()
 	{
 		mapManager = gameObject.GetComponent<MapManager>();
-
-		guestDespawner = GameObject.Find("GuestDespawner").transform;
-		guestSpawner = GameObject.Find("GuestSpawner").transform;
-
-		guestEntrance = GameObject.Find("GuestEntrance").transform;
-		guestExit = GameObject.Find("GuestExit").transform;
+		
 	}
 
 	// Start is called before the first frame update
@@ -36,11 +82,11 @@ public class GuestManager : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		timeUntilNextGuestWave -= Time.deltaTime;
-		if(timeUntilNextGuestWave <= 0f)
+		spawnCountdown -= Time.deltaTime;
+		if(spawnCountdown <= 0f)
 		{
 			StartCoroutine(SpawnGuests());
-			timeUntilNextGuestWave = spawnDelay;
+			spawnCountdown = SpawnDelayBetweenWaves;
 		}
 	}
 	
@@ -49,6 +95,7 @@ public class GuestManager : MonoBehaviour
 	/// </summary>
 	public void DeleteGuests()
 	{
+		//TODO: use a listener channel
 		foreach(GameObject guestObject in GameObject.FindGameObjectsWithTag("Guest"))
 		{
 			Destroy(guestObject);
@@ -60,6 +107,7 @@ public class GuestManager : MonoBehaviour
 	/// </summary>
 	public void ForceGuestsLeave()
 	{
+		//TODO: use a listener channel
 		foreach (GameObject guestObject in GameObject.FindGameObjectsWithTag("Guest"))
 		{
 			Guest guest = guestObject.GetComponent<Guest>();
@@ -75,7 +123,7 @@ public class GuestManager : MonoBehaviour
 	{
 		int possibleGuestNum = 1;
 
-		float currentRatingPercentage = mapManager.hotelStateData.CurrentHotelRatingPercentage;
+		float currentRatingPercentage = hotelStateData.CurrentHotelRatingPercentage;
 
 		if (currentRatingPercentage > 0.4f) possibleGuestNum += 1;
 		if (currentRatingPercentage > 0.8f) possibleGuestNum += 1;
@@ -92,7 +140,7 @@ public class GuestManager : MonoBehaviour
 
 			guest.MapManager = mapManager;
 			 
-			yield return new WaitForSeconds(.2f);
+			yield return new WaitForSeconds(spawnDelayBetweenGuests);
 		}
 		 
 	}
