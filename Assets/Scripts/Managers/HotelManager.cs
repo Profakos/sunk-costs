@@ -63,6 +63,8 @@ public class HotelManager : MonoBehaviour
 
 	void Awake()
 	{
+		Screen.SetResolution(1600, 900, false);
+
 		debugButtonGroup.SetActive(false);
 		
 		hotelStateData.Money = 500;
