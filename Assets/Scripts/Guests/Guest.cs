@@ -487,12 +487,11 @@ public class Guest : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Signs up to the room's sinking delegate
+	/// Signs up to the room's sinking event
 	/// </summary>
 	/// <param name="floodedOrSunk"></param>
 	private void HandleSinking(bool floodedOrSunk)
 	{
-
 		target += new Vector2(0, -1);
 
 		if(!floodedOrSunk)

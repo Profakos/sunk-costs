@@ -68,10 +68,10 @@ public class HotelManager : MonoBehaviour
 		debugButtonGroup.SetActive(false);
 		
 		hotelStateData.Money = 500;
-		hotelStateData.moneyChangeHandler += UpdateMoneyDisplay;
+		hotelStateData.MoneyChangeHandler += UpdateMoneyDisplay;
 
 		hotelStateData.CurrentHotelRating = 0;
-		hotelStateData.ratingChangeHandler += UpdateRatingDisplay;
+		hotelStateData.RatingChangeHandler += UpdateRatingDisplay;
 
 		List<float> initReviews = new List<float>();
 		for (int i = 0; i < hotelStateData.MaxReviewRemembered; i++) initReviews.Add(1);
@@ -85,8 +85,8 @@ public class HotelManager : MonoBehaviour
 	
 	void OnDestroy()
 	{
-		hotelStateData.moneyChangeHandler -= UpdateMoneyDisplay;
-		hotelStateData.ratingChangeHandler -= UpdateRatingDisplay;
+		hotelStateData.MoneyChangeHandler -= UpdateMoneyDisplay;
+		hotelStateData.RatingChangeHandler -= UpdateRatingDisplay;
 	}
 
 	// Start is called before the first frame update

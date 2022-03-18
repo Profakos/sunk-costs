@@ -7,7 +7,8 @@ using System.Linq;
 [CreateAssetMenu(fileName = "HotelStateData", menuName = "ScriptableObjects/HotelData/HotelState", order = 2)]
 public class HotelStateData : ScriptableObject
 {
-	public delegate void ValueChangeDelegate();
+	public event Action MoneyChangeHandler;
+	public event Action RatingChangeHandler;
 
 	private float initialHotelHeight = 0;
 	[SerializeField]
@@ -15,7 +16,6 @@ public class HotelStateData : ScriptableObject
 
 	[SerializeField]
 	private float money = 2000f;
-	public event ValueChangeDelegate moneyChangeHandler;
 
 	[SerializeField]
 	private float roomRentPerSecond = 1f;
@@ -29,7 +29,6 @@ public class HotelStateData : ScriptableObject
 	private int maxHotelRating = 5;
 	[SerializeField]
 	private float currentHotelRating = 0f;
-	public event ValueChangeDelegate ratingChangeHandler;
 
 	[SerializeField]
 	public Queue<float> reviews = new Queue<float>();
@@ -40,15 +39,14 @@ public class HotelStateData : ScriptableObject
 	public float InitialHotelHeight { get => initialHotelHeight; }
 	public int TotalSpawnedFloors { get; set; }
 
-	public float Money { get => money; set { money = Math.Max(0, value); if(moneyChangeHandler != null)moneyChangeHandler.Invoke(); } }
+	public float Money { get => money; set { money = Math.Max(0, value); MoneyChangeHandler?.Invoke(); } }
 
 	public float FloorPurchasePrice { get => floorPurchasePrice; set => floorPurchasePrice = value; }
 	public string FloorLabel { get => floorLabel; set => floorLabel = value; }
 	public float RoomRentPerSecond { get => roomRentPerSecond; set => roomRentPerSecond = value; }
 	public int MaxHotelRating { get => maxHotelRating; set => maxHotelRating = value; }
 	public float CurrentHotelRating { get => currentHotelRating; set { currentHotelRating = Math.Max(0, Math.Min(value, maxHotelRating));
-			
-			if (ratingChangeHandler != null) ratingChangeHandler.Invoke(); } }
+			RatingChangeHandler?.Invoke(); } }
 	public float CurrentHotelRatingPercentage { get => currentHotelRating / maxHotelRating; }
 	public int MaxReviewRemembered { get => maxReviewRemembered; set => maxReviewRemembered = value; }
 

@@ -33,8 +33,10 @@ public class HotelRoom : MonoBehaviour
 	public float NeedFulfillingRate { get => needFulfillingRate; set => needFulfillingRate = value; }
 	public float LuxuryMultiplier { get => luxuryMultiplier; set => luxuryMultiplier = value; }
 
-	public delegate void SinkingDelegate(bool floodedOrSunk);
-	public event SinkingDelegate sinkingHandler;
+	/// <summary>
+	/// Event parameter is floodedOrSunk
+	/// </summary>
+	public event Action<bool> SinkingHandler;
 
 	void Awake()
 	{
@@ -90,20 +92,18 @@ public class HotelRoom : MonoBehaviour
 		{
 			Sunk = true;
 		}
-
-		if(sinkingHandler != null)
-		sinkingHandler.Invoke(Flooded || Sunk);
+		
+		SinkingHandler?.Invoke(Flooded || Sunk);
 	}
 
-	public void SubscribeSink(SinkingDelegate e)
+	public void SubscribeSink(Action<bool> sinkingCallback)
 	{
-		sinkingHandler += e;
+		SinkingHandler += sinkingCallback;
 	}
 
-	public void UnsubscribeSink(SinkingDelegate e)
+	public void UnsubscribeSink(Action<bool> sinkingCallback)
 	{
-		if (sinkingHandler == null) return;
-		sinkingHandler -= e;
+		SinkingHandler -= sinkingCallback;
 	}
 	
 	public struct PathDataNode
